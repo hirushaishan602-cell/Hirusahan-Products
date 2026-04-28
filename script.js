@@ -1,182 +1,192 @@
-// --- 1. පවතින Login & UI Logic ---
 const loginScreen = document.getElementById('login-screen');
 const mainWebsite = document.getElementById('main-website');
 const authForm = document.getElementById('authForm');
+const reAuthContainer = document.getElementById('reAuthContainer');
+const emailField = document.getElementById('user-email');
+const passwordField = document.getElementById('user-pass');
+const togglePassword = document.getElementById('togglePassword');
+const rememberMeCheckbox = document.getElementById('remember-me');
+const loadingOverlay = document.getElementById('loading-overlay');
 
-// Authorize වෙලාද බලනවා
+const productData = [
+    { name: "Premium Chili Powder", img: "🌶️", price: 450 },
+    { name: "Organic Turmeric", img: "🌿", price: 380 },
+    { name: "Ceylon Cinnamon", img: "🪵", price: 950 },
+    { name: "Black Pepper Grains", img: "🧂", price: 620 },
+    { name: "Curry Powder (Mixed)", img: "🍂", price: 350 },
+    { name: "Nutmeg Spices", img: "🌰", price: 890 },
+    { name: "Cardamom Pods", img: "🍀", price: 1200 }
+];
+
+let orderList = [];
+
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
+  authDomain: "hirusahan.firebaseapp.com",
+  projectId: "hirusahan",
+  storageBucket: "hirusahan.firebasestorage.app",
+  messagingSenderId: "249838072125",
+  appId: "1:249838072125:web:90f2331d89b98b75b01554",
+  measurementId: "G-F3YMBL1PM1"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
 window.addEventListener('load', () => {
-    if (localStorage.getItem('hirusahan_auth') === 'granted') {
-        showWebsite();
+    const isAuth = localStorage.getItem('hirusahan_auth') === 'granted';
+    const savedEmail = localStorage.getItem('remembered_email');
+
+    if (isAuth && savedEmail) {
+        authForm.style.display = 'none';
+        reAuthContainer.style.display = 'block';
+    } else {
+        authForm.style.display = 'block';
+        reAuthContainer.style.display = 'none';
     }
-    // Remember Me චෙක් කරනවා
-    const savedEmail = localStorage.getItem("rememberedEmail");
+
     if (savedEmail) {
-        document.getElementById("user-email").value = savedEmail;
-        document.getElementById("rememberMe").checked = true;
+        emailField.value = savedEmail;
+        rememberMeCheckbox.checked = true;
     }
+    displayProducts();
 });
 
-// Authentication logic
+togglePassword.addEventListener('click', function () {
+    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordField.setAttribute('type', type);
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+});
+
 authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('user-email').value;
-    const pass = document.getElementById('user-pass').value;
-    const rememberMe = document.getElementById("rememberMe").checked;
+    const email = emailField.value;
+    const password = passwordField.value;
+    
+    loadingOverlay.style.display = 'flex';
 
     try {
-        // Firebase Login
-        await auth.signInWithEmailAndPassword(email, pass);
-        if (rememberMe) {
-            localStorage.setItem("rememberedEmail", email);
-        }
-        localStorage.setItem('hirusahan_auth', 'granted');
-        showWebsite();
+        await auth.signInWithEmailAndPassword(email, password);
+        handleSuccessAuth(email);
     } catch (error) {
-        // User නැත්නම් Auto Sign-up වෙනවා
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-login-credentials') {
+        if (error.code === 'auth/user-not-found') {
             try {
-                await auth.createUserWithEmailAndPassword(email, pass);
-                localStorage.setItem('hirusahan_auth', 'granted');
-                showWebsite();
-            } catch (signUpError) {
-                alert("Error: " + signUpError.message);
-            }
-        } else {
-            alert("Login Failed: " + error.message);
-        }
+                await auth.createUserWithEmailAndPassword(email, password);
+                handleSuccessAuth(email);
+            } catch (regError) { alert("Error: " + regError.message); }
+        } else { alert("Login Failed: " + error.message); }
+    } finally {
+        loadingOverlay.style.display = 'none';
     }
 });
+
+function handleSuccessAuth(email) {
+    localStorage.setItem('hirusahan_auth', 'granted');
+    if (rememberMeCheckbox.checked) {
+        localStorage.setItem('remembered_email', email);
+    } else {
+        localStorage.removeItem('remembered_email');
+    }
+    showWebsite();
+}
 
 function showWebsite() {
     loginScreen.style.display = 'none';
     mainWebsite.style.display = 'block';
 }
 
-function secureLogout() {
-    auth.signOut().then(() => {
-        localStorage.removeItem('hirusahan_auth');
-        location.reload(); 
-    });
+window.clearSavedSession = function() {
+    auth.signOut();
+    localStorage.removeItem('hirusahan_auth');
+    localStorage.removeItem('remembered_email');
+    location.reload();
 }
 
-// Password ඇස (Eye icon) එක පාලනය
-function togglePasswordVisibility() {
-    const passInput = document.getElementById("user-pass");
-    const eyeIcon = document.getElementById("toggleEye");
-    if (passInput.type === "password") {
-        passInput.type = "text";
-        eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
-    } else {
-        passInput.type = "password";
-        eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
-    }
+window.secureLogout = function() {
+    localStorage.removeItem('hirusahan_auth');
+    location.reload(); 
 }
 
-// --- 2. Firebase Config (ඔයාගේ Original Config එක) ---
-const firebaseConfig = {
-    apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
-    authDomain: "hirusahan.firebaseapp.com",
-    projectId: "hirusahan",
-    storageBucket: "hirusahan.firebasestorage.app",
-    messagingSenderId: "249838072125",
-    appId: "1:249838072125:web:90f2331d89b98b75b01554",
-    measurementId: "G-F3YMBL1PM1"
+function displayProducts() {
+    const container = document.getElementById('product-container');
+    container.innerHTML = productData.map((p, index) => `
+        <div class="product-card">
+            <span class="product-img">${p.img}</span>
+            <h3>${p.name}</h3>
+            <div class="product-options">
+                <div class="option-group">
+                    <label>Weight:</label>
+                    <select id="weight-${index}" class="item-weight">
+                        <option value="0.5">50g</option>
+                        <option value="1" selected>100g</option>
+                        <option value="2.5">250g</option>
+                        <option value="5">500g</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label>Packets:</label>
+                    <input type="number" id="qty-${index}" class="item-qty" value="1" min="1">
+                </div>
+            </div>
+            <p class="price-tag">LKR ${p.price.toFixed(2)} (100g)</p>
+            <button class="add-cart" onclick="addToList(${index})">ADD TO LIST</button>
+        </div>
+    `).join('');
+}
+
+window.addToList = function(index) {
+    const product = productData[index];
+    const weightSelect = document.getElementById(`weight-${index}`);
+    const weightMultiplier = parseFloat(weightSelect.value);
+    const weightLabel = weightSelect.options[weightSelect.selectedIndex].text;
+    const qty = parseInt(document.getElementById(`qty-${index}`).value);
+    if (qty < 1) return;
+    const subtotal = product.price * weightMultiplier * qty;
+    orderList.push({ name: product.name, weight: weightLabel, qty: qty, total: subtotal });
+    updateOrderTable();
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const auth = firebase.auth();
-
-// --- 3. අලුත් Add to Cart & Price System එක ---
-let currentProduct = { name: "", basePrice: 0 };
-
-// බටන් එක එබුවම Modal එක පෙන්වනවා
-function addToCart(name, price) {
-    currentProduct.name = name;
-    currentProduct.basePrice = price; // 100g සඳහා මිල
-    
-    document.getElementById("modal-product-name").innerText = name.toUpperCase();
-    
-    // Modal එක ඇතුළේ අගයන් මුලට (Reset) කරනවා
-    document.getElementById("weight-select").value = "100";
-    document.getElementById("packet-count").value = "1";
-    
-    updateTotalPrice(); // මිල මුලින්ම ගණනය කරනවා
-    document.getElementById("qty-modal").style.display = "block";
+function updateOrderTable() {
+    const tableBody = document.getElementById('orderItems');
+    if(!tableBody) return;
+    tableBody.innerHTML = orderList.map((item, index) => `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.weight}</td>
+            <td>${item.qty}</td>
+            <td>LKR ${item.total.toFixed(2)}</td>
+            <td><button class="remove-item" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button></td>
+        </tr>
+    `).join('');
+    const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
+    document.getElementById('grandTotal').innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
 }
 
-// මිල ගණනය කිරීමේ මධ්‍යස්ථානය
-function updateTotalPrice() {
-    const weightSelect = document.getElementById("weight-select");
-    const packetInput = document.getElementById("packet-count");
-    
-    if (weightSelect && packetInput) {
-        const weight = parseInt(weightSelect.value);
-        const packets = parseInt(packetInput.value) || 1; // අගයක් නැත්නම් 1 ලෙස ගන්නවා
-        
-        // ගණනය: (බර / 100) * මූලික මිල * පැකට් ගණන
-        const total = (weight / 100) * currentProduct.basePrice * packets;
-        
-        // UI එකට මිල යවනවා
-        document.getElementById("total-price-display").innerText = total.toFixed(2);
+window.removeItem = function(index) {
+    orderList.splice(index, 1);
+    updateOrderTable();
+};
+
+window.sendToWhatsApp = function() {
+    if (orderList.length === 0) {
+        alert("ඔබේ Order List එක හිස්!");
+        return;
     }
-}
+    let phoneNumber = "947XXXXXXXX"; 
+    let message = "📦 *NEW ORDER - HIRUSAHAN PRODUCTS*\n\n";
+    orderList.forEach((item, index) => {
+        message += `*${index + 1}. ${item.name}*\n   Weight: ${item.weight}\n   Qty: ${item.qty} packets\n   Subtotal: LKR ${item.total.toFixed(2)}\n\n`;
+    });
+    const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
+    message += `*GRAND TOTAL: LKR ${grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}*`;
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+};
 
-// Listeners: මේවායින් තමයි ක්ලික් කරද්දී එවලේම මිල මාරු කරන්නේ
-document.getElementById("weight-select").addEventListener("change", updateTotalPrice);
-document.getElementById("packet-count").addEventListener("input", updateTotalPrice);
-
-function closeModal() {
-    document.getElementById("qty-modal").style.display = "none";
-}
-
-function addToFinalCart() {
-    const weight = document.getElementById("weight-select").value;
-    const packets = document.getElementById("packet-count").value;
-    const finalPrice = document.getElementById("total-price-display").innerText;
-
-    alert(`Cart එකට එකතු කළා:\n${currentProduct.name}\nබර: ${weight}g\nපැකට්: ${packets}\nමුළු මිල: LKR ${finalPrice}`);
-    closeModal();
-}async function socialAuth(providerName) {
-    if (providerName === 'Google') {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        
-        // මේකෙන් වෙන්නේ Google Login Window එක Popup එකක් විදිහට එන එක
-        try {
-            const result = await auth.signInWithPopup(provider);
-            const user = result.user;
-            
-            // සාර්ථකව ලොග් වුණොත් 'granted' කියලා සේව් කරලා ඇතුළට යවනවා
-            localStorage.setItem('hirusahan_auth', 'granted');
-            showWebsite();
-            console.log("Google Login Success:", user.email);
-            
-        } catch (error) {
-            // මොකක් හරි Error එකක් ආවොත් මේකෙන් බලාගන්න පුළුවන්
-            console.error("Google Auth Error:", error.code);
-            alert("Google Login Error: " + error.message);
-        }
-    }
-}function sendToWhatsApp() {
-    const weight = document.getElementById("weight-select").value;
-    const packets = document.getElementById("packet-count").value;
-    const finalPrice = document.getElementById("total-price-display").innerText;
-    const productName = currentProduct.name;
-
-    // ඔයාගේ WhatsApp අංකය මෙතනට දාන්න (උදා: 94771234567)
-    const myNumber = "94720191167"; 
-
-    // මැසේජ් එක ලස්සනට සකස් කරමු
-    const message = `*--- NEW ORDER: HIRUSAHAN PRODUCTS ---*%0A` +
-                    `*Product:* ${productName}%0A` +
-                    `*Weight:* ${weight}g%0A` +
-                    `*Packets:* ${packets}%0A` +
-                    `*Total Price:* LKR ${finalPrice}%0A` +
-                    `-----------------------------------%0A` +
-                    `කරුණාකර මගේ ඇණවුම තහවුරු කරන්න.`;
-
-    // WhatsApp Link එක සාදා විවෘත කිරීම
-    const whatsappURL = `https://wa.me/${myNumber}?text=${message}`;
-    window.open(whatsappURL, '_blank').focus();
+async function socialAuth(platform) {
+    let provider = new firebase.auth.GoogleAuthProvider();
+    try {
+        await auth.signInWithPopup(provider);
+        handleSuccessAuth(auth.currentUser.email);
+    } catch (error) { console.log(error); }
 }

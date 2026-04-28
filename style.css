@@ -2,8 +2,11 @@
     --primary: #ff6600;
     --secondary: #ffcc00;
     --bg-dark: #050505;
-    --card-bg: rgba(20, 20, 20, 0.8);
-    --neon-glow: 0 0 15px rgba(255, 102, 0, 0.7);
+    --card-bg: rgba(20, 20, 20, 0.9);
+    --neon-glow: 0 0 15px rgba(255, 102, 0, 0.6);
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-ui: 'Rajdhani', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -11,56 +14,51 @@
 body {
     background-color: var(--bg-dark);
     color: #ffffff;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-main);
     overflow-x: hidden;
 }
 
-/* Login Screen Styles */
 #login-screen {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100vh;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
     background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
+    display: flex; justify-content: center; align-items: center; z-index: 10000;
 }
 
 .login-card {
-    background: var(--card-bg);
-    padding: 40px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 400px;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 102, 0, 0.2);
-    text-align: center;
+    background: var(--card-bg); padding: 40px; border-radius: 20px;
+    width: 90%; max-width: 400px; backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 102, 0, 0.2); text-align: center;
 }
 
-.login-logo { height: 90px; margin-bottom: 25px; filter: drop-shadow(var(--neon-glow)); }
-
-.login-card h2 { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+.login-logo { height: 80px; margin-bottom: 20px; filter: drop-shadow(var(--neon-glow)); }
+.login-card h2 { font-family: var(--font-heading); letter-spacing: 2px; font-size: 1.5rem; }
 .login-card h2 span { color: var(--primary); }
 
-.login-subtext { color: #888; font-size: 0.8rem; margin-bottom: 20px; }
-
 .login-input {
-    width: 100%; padding: 14px; margin: 12px 0;
+    width: 100%; padding: 14px; margin: 10px 0;
     background: rgba(255, 255, 255, 0.05); border: 1px solid #333;
-    color: #fff; border-radius: 10px; outline: none;
+    color: #fff; border-radius: 8px; outline: none; font-family: var(--font-main);
 }
 
-.login-input:focus { border-color: var(--primary); }
+.password-container { position: relative; width: 100%; }
+.toggle-eye {
+    position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+    cursor: pointer; color: var(--primary); z-index: 10;
+}
+
+.remember-me-container {
+    display: flex; align-items: center; gap: 10px; margin: 15px 0;
+    font-size: 0.9rem; font-family: var(--font-ui); color: #ccc; cursor: pointer;
+}
 
 .login-btn {
-    width: 100%; padding: 14px; background: var(--primary);
-    color: white; border: none; border-radius: 10px;
-    font-family: 'Orbitron'; cursor: pointer; margin-top: 20px;
-    box-shadow: var(--neon-glow);
+    width: 100%; padding: 15px; background: var(--primary);
+    color: white; border: none; border-radius: 8px;
+    font-family: var(--font-ui); font-weight: 700; font-size: 1.1rem;
+    cursor: pointer; text-transform: uppercase;
 }
 
-/* Main Website Styles */
-#main-website { display: none; }
+#main-website { display: none; padding-top: 80px; }
 
 header {
     background: rgba(0, 0, 0, 0.95); padding: 15px 5%;
@@ -69,246 +67,102 @@ header {
     border-bottom: 1px solid rgba(255, 102, 0, 0.2);
 }
 
-.header-logo-area { display: flex; align-items: center; gap: 12px; }
-.nav-logo-small { height: 40px; border-radius: 50%; border: 1px solid var(--primary); }
-.brand-text { font-family: 'Orbitron'; font-weight: bold; font-size: 1.1rem; }
+.brand-text { font-family: var(--font-heading); font-weight: 700; color: #fff; }
+.nav-logo-small { height: 35px; border-radius: 50%; border: 1px solid var(--primary); }
 
 .hero {
-    height: 60vh;
+    height: 40vh; text-align: center; display: flex; align-items: center; justify-content: center;
     background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=1350&q=80');
     background-size: cover; background-position: center;
-    display: flex; align-items: center; justify-content: center; text-align: center;
 }
 
-.hero h1 { font-family: 'Orbitron'; font-size: 3rem; }
-.hero h1 span { color: var(--primary); text-shadow: var(--neon-glow); }
+.hero h1 { font-family: var(--font-heading); font-size: clamp(1.8rem, 8vw, 3.5rem); }
+.hero p { font-family: var(--font-ui); font-size: 1.2rem; color: #bbb; }
 
-.store-section { padding: 60px 5%; text-align: center; }
-.section-title { font-family: 'Orbitron'; }
-
-.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+.store-section { padding: 40px 5%; text-align: center; }
+.section-title { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 30px; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
 
 .product-card {
-    background: var(--card-bg); padding: 30px; border-radius: 20px;
+    background: var(--card-bg); padding: 25px; border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.4s;
 }
 
-.product-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: var(--neon-glow); }
+.product-card h3 { font-family: var(--font-ui); font-size: 1.4rem; font-weight: 600; margin-bottom: 10px; }
 
-.product-img { font-size: 60px; margin-bottom: 20px; display: block; }
-.price-tag { color: var(--secondary); font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
+.product-options { display: flex; justify-content: space-between; gap: 10px; margin: 15px 0; text-align: left; }
+.option-group label { font-family: var(--font-ui); font-weight: 600; font-size: 0.85rem; color: #888; }
+.item-weight, .item-qty {
+    background: #111; border: 1px solid #333; color: white; padding: 10px;
+    border-radius: 5px; width: 100%; outline: none; font-family: var(--font-main);
+}
 
+.price-tag { font-family: var(--font-ui); color: var(--secondary); font-weight: 700; font-size: 1.2rem; }
 .add-cart {
-    width: 100%; padding: 10px; background: transparent;
-    border: 2px solid var(--primary); color: white; border-radius: 8px; cursor: pointer;
+    width: 100%; padding: 12px; background: transparent; border: 2px solid var(--primary);
+    color: white; border-radius: 8px; font-family: var(--font-ui); font-weight: 700;
+    cursor: pointer; transition: 0.3s;
 }
+.add-cart:hover { background: var(--primary); }
 
-.logout-btn { background: #ff3333; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; }
+/* Order List Styles */
+.order-list-section { padding: 50px 5%; background: #0a0a0a; border-top: 1px solid rgba(255, 102, 0, 0.2); }
+.order-container { max-width: 900px; margin: 0 auto; background: var(--card-bg); padding: 25px; border-radius: 15px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th { font-family: var(--font-ui); color: var(--primary); padding: 15px; text-align: left; border-bottom: 2px solid #222; }
+td { font-family: var(--font-main); padding: 15px; border-bottom: 1px solid #222; }
 
-footer { text-align: center; padding: 40px; color: #444; }.divider {
-    margin: 20px 0;
-    border-bottom: 1px solid #333;
-    line-height: 0.1em;
-    text-align: center;
+.total-area h3 { font-family: var(--font-heading); color: var(--secondary); margin-top: 20px; font-size: 1.5rem; }
+
+.whatsapp-btn {
+    margin-top: 20px; width: 100%; padding: 15px; background: #25D366;
+    color: white; border: none; border-radius: 8px; font-family: var(--font-ui);
+    font-weight: 700; font-size: 1.1rem; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 10px; transition: 0.3s;
 }
+.whatsapp-btn:hover { background: #128C7E; box-shadow: 0 0 15px rgba(37, 211, 102, 0.5); }
 
-.divider span {
-    background: #151515; /* මේක ඔයාගේ Card එකේ Background එකට සමාන විය යුතුයි */
-    padding: 0 10px;
-    color: #666;
-    font-size: 0.7rem;
-    font-family: 'Orbitron';
-}
+.remove-item { background: #ff3333; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+.logout-btn { background: #ff3333; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
 
-.social-login {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
+.divider { margin: 20px 0; border-bottom: 1px solid #333; line-height: 0.1em; text-align: center; }
+.divider span { background: #151515; padding: 0 10px; color: #666; font-size: 0.7rem; font-family: var(--font-heading); }
+.social-login { display: flex; gap: 10px; margin-top: 15px; }
 .social-btn {
-    flex: 1;
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px; border-radius: 8px; border: 1px solid #333; background: rgba(255, 255, 255, 0.05);
+    color: white; font-family: var(--font-ui); cursor: pointer;
+}
+
+@media (max-width: 600px) { .brand-text { display: none; } }.social-btn img {
+    height: 20px; /* Icon එකේ උස */
+    width: auto;  /* පළල උසට සාපේක්ෂව ඉබේ සැකසේ */
+    object-fit: contain;
+}
+
+/* Button එක ඇතුළේ icon එක සහ text එක මැදට ගැනීමට */
+.social-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
     border-radius: 8px;
     border: 1px solid #333;
     background: rgba(255, 255, 255, 0.05);
     color: white;
-    font-size: 0.8rem;
     cursor: pointer;
     transition: 0.3s;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+}#loading-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; z-index: 20000;
 }
-
-.social-btn img { height: 18px; }
-
-.social-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #ff6600; /* Primary Orange */
-}/* Password Styling */
-.password-wrapper {
-    position: relative;
-    width: 100%;
+.loader {
+    width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #ff6600;
+    border-radius: 50%; animation: spin 1s linear infinite;
 }
-
-.toggle-password {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #ff7606;
-    text-shadow: 0 0 10px #050505;
-    z-index: 10;
-}
-
-/* Remember Me Checkbox */
-.remember-me-container {
-    margin: 10px 0 20px 0;
-    text-align: left;
-}
-
-.cyber-checkbox {
-    color: #ff7a0c;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.cyber-checkbox input { display: none; }
-
-.checkmark {
-    height: 15px;
-    width: 15px;
-    border: 1px solid #ff7300;
-    margin-right: 10px;
-    display: inline-block;
-    box-shadow: 0 0 5px #ffc115;
-}
-
-.cyber-checkbox input:checked + .checkmark {
-    background: #ff7b00;
-    box-shadow: 0 0 15px #ffb922;
-}/* Input fields වලට අකුරු ගැසීමට ඉඩ දීම */
-.login-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #ff8800;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-    outline: none;
-    position: relative;
-    z-index: 5; /* අනෙක් ඒවාට වඩා උඩින් තැබීම */
-    pointer-events: auto !important; /* Click කිරීමට ඉඩ දීම */
-}
-
-/* Password wrapper එකටත් අවසර දීම */
-.password-wrapper {
-    position: relative;
-    z-index: 10;
-}
-
-.toggle-password {
-    z-index: 11;
-    pointer-events: auto;
-}/* Product Image Styling */
-.product-img-container {
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-    border-bottom: 2px solid #ff8800; /* Cyan line below image */
-    margin-bottom: 15px;
-    position: relative;
-}
-
-.product-img-real {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* පින්තූරය ඇද නොවී කොටුවට ගැලපේ */
-    transition: transform 0.5s ease;
-    filter: brightness(0.8) contrast(1.2); /* පොඩි dark premium look එකක් */
-}
-
-/* Hover කළාම පින්තූරය zoom වෙන්න */
-.product-card:hover .product-img-real {
-    transform: scale(1.1);
-    filter: brightness(1);
-}
-
-/* Product Card එකට Neon Glow එකක් */
-.product-card {
-    background: rgba(15, 15, 15, 0.9);
-    border: 1px solid #fe7d13; /* Purple border */
-    box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
-    transition: all 0.3s ease;
-}
-
-.product-card:hover {
-    border-color: #ff8800;
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-    transform: translateY(-5px);
-}/* Modal Background */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(5px);
-}
-
-/* Cyberpunk Modal Box */
-.modal-content {
-    background: #050505;
-    margin: 10% auto;
-    padding: 30px;
-    border: 2px solid #ff9100;
-    width: 320px;
-    box-shadow: 0 0 20px #ffae00;
-    text-align: center;
-    position: relative;
-}
-
-.cyber-select, .cyber-input {
-    background: #111;
-    border: 1px solid #feac13;
-    color: #fff;
-    padding: 5px;
-    margin-left: 7px;
-    outline: none;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.selection-row { margin: 20px 0; display: flex; justify-content: space-between; align-items: center; }
-
-.price-display {
-    font-size: 20px;
-    color: #ff7b00;
-    margin: 20px 0;
-    font-weight: bold;
-    text-shadow: 0 0 10px #ffae00;
-}
-
-.confirm-btn {
-    width: 100%;
-    padding: 12px;
-    background: #fe9813;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    transition: 0.3s;
-}
-
-.confirm-btn:hover { background: #ff9900; color: #000; box-shadow: 0 0 15px #ff9900; }
-
-.close-btn { position: absolute; right: 15px; top: 10px; color: #fff; font-size: 25px; cursor: pointer; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

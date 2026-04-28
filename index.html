@@ -5,38 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hirusahan Products | Secure Access</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+    </div>
 
     <div id="login-screen">
         <div class="login-card">
             <img src="logo.png" alt="Hirusahan Logo" class="login-logo">
             <h2>CLIENT <span>LOGIN</span></h2>
-            <p class="login-subtext">Access Secured by Hirusahan Products.</p>
             
             <form id="authForm">
                 <input type="email" id="user-email" class="login-input" placeholder="Email Address" required>
-                
-                <div class="password-wrapper">
-                    <input type="password" id="user-pass" class="login-input" placeholder="Password" required autocomplete="current-password">
-                    <i class="fas fa-eye toggle-password" id="toggleEye" onclick="togglePasswordVisibility()"></i>
+                <div class="password-container">
+                    <input type="password" id="user-pass" class="login-input" placeholder="Password" required>
+                    <i class="fas fa-eye toggle-eye" id="togglePassword"></i>
                 </div>
-
                 <div class="remember-me-container">
-                    <label class="cyber-checkbox">
-                        <input type="checkbox" id="rememberMe">
-                        <span class="checkmark"></span>
-                        Remember Me
-                    </label>
+                    <input type="checkbox" id="remember-me">
+                    <label for="remember-me">Remember Me</label>
                 </div>
-
-                <button type="submit" class="login-btn">Login</button>
+                <button type="submit" class="login-btn">LOGIN TO SYSTEM</button>
             </form>
 
-            <div class="divider"><span>OR CONTINUE WITH</span></div>
+            <div id="reAuthContainer" style="display: none; margin-top: 20px;">
+                <p style="margin-bottom: 15px; color: #bbb; font-family: 'Rajdhani';">Welcome Back!</p>
+                <button onclick="showWebsite()" class="login-btn">ENTER SYSTEM</button>
+                <p onclick="clearSavedSession()" style="margin-top: 15px; font-size: 0.8rem; cursor: pointer; color: var(--primary);">Login as different user</p>
+            </div>
 
+            <div class="divider"><span>OR CONTINUE WITH</span></div>
             <div class="social-login">
                 <button type="button" class="social-btn google" onclick="socialAuth('Google')">
                     <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google"> Google
@@ -45,11 +46,11 @@
         </div>
     </div>
 
-    <div id="main-website" style="display: none;">
+    <div id="main-website">
         <header>
             <div class="header-logo-area">
                 <img src="logo.png" alt="Logo" class="nav-logo-small">
-                <span class="brand-text">HIRUSAHAN Products</span>
+                <span class="brand-text">HIRUSAHAN PRODUCTS</span>
             </div>
             <button class="logout-btn" onclick="secureLogout()">LOGOUT</button>
         </header>
@@ -63,39 +64,35 @@
 
         <section class="store-section">
             <h2 class="section-title">SECURE COLLECTION</h2>
-          <div class="product-grid">
-    <div class="product-card">
-        <div class="product-img-container">
-            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80" alt="Chili Powder" class="product-img-real">
-        </div>
-        <h3>Premium Chili Powder</h3>
-        <p class="price-tag">LKR 450.00</p>
-        <button class="add-cart" onclick="addToCart('Chili Powder', 450)">Add to Cart</button>
-    </div>
+            <div id="product-container" class="product-grid"></div>
+        </section>
 
-    <div class="product-card">
-        <div class="product-img-container">
-            <img src="https://images.unsplash.com/photo-1615485242231-80781a6cb981?auto=format&fit=crop&w=500&q=80" alt="Turmeric" class="product-img-real">
-        </div>
-        <h3>Organic Turmeric</h3>
-        <p class="price-tag">LKR 380.00</p>
-        <button class="add-cart" onclick="addToCart('Organic Turmeric', 380)">Add to Cart</button>
-    </div>
-
-    <div class="product-card">
-        <div class="product-img-container">
-            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=500&q=80" alt="Cinnamon" class="product-img-real">
-        </div>
-        <h3>Ceylon Cinnamon</h3>
-        <p class="price-tag">LKR 950.00</p>
-        <button class="add-cart" onclick="addToCart('Ceylon Cinnamon', 950)">Add to Cart</button>
-        
-    </div>
-</div>
+        <section class="order-list-section">
+            <h2 class="section-title">YOUR <span>ORDER LIST</span></h2>
+            <div class="order-container">
+                <table id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Weight</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderItems"></tbody>
+                </table>
+                <div class="total-area">
+                    <h3>TOTAL: LKR <span id="grandTotal">0.00</span></h3>
+                    <button class="whatsapp-btn" onclick="sendToWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> SEND VIA WHATSAPP
+                    </button>
+                </div>
+            </div>
         </section>
 
         <footer>
-            <p>&copy; 2026 Hirusahan Products. Encrypted Client Access Only.</p>
+            <p>&copy; 2026 Hirusahan Products. All Rights Reserved.</p>
         </footer>
     </div>
 
@@ -103,31 +100,4 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="script.js"></script>
 </body>
-</html><div id="qty-modal" class="modal">
-    <div class="modal-content cyberpunk-box">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h3 id="modal-product-name">SELECT QUANTITY</h3>
-        <p class="modal-subtext">Choose your weight and package count.</p>
-        
-        <div class="selection-row">
-    <label>Weight (Grams):</label>
-    <select id="weight-select" class="cyber-select" onchange="updateTotalPrice()">
-        <option value="50">50g</option>
-        <option value="100" selected>100g</option>
-        <option value="250">250g</option>
-        <option value="500">500g</option>
-    </select>
-</div>
-
-<div class="selection-row">
-    <label>No. of Packets:</label>
-    <input type="number" id="packet-count" class="cyber-input" value="1" min="1" oninput="updateTotalPrice()">
-</div>
-
-        <div class="price-display">
-            TOTAL: LKR <span id="total-price-display">0.00</span>
-        </div>
-
-        <button class="confirm-btn" onclick="sendToWhatsApp()">SEND ORDER VIA WHATSAPP</button>
-    </div>
-</div>
+</html>
