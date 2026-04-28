@@ -138,4 +138,45 @@ function addToFinalCart() {
 
     alert(`Cart එකට එකතු කළා:\n${currentProduct.name}\nබර: ${weight}g\nපැකට්: ${packets}\nමුළු මිල: LKR ${finalPrice}`);
     closeModal();
+}async function socialAuth(providerName) {
+    if (providerName === 'Google') {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        
+        // මේකෙන් වෙන්නේ Google Login Window එක Popup එකක් විදිහට එන එක
+        try {
+            const result = await auth.signInWithPopup(provider);
+            const user = result.user;
+            
+            // සාර්ථකව ලොග් වුණොත් 'granted' කියලා සේව් කරලා ඇතුළට යවනවා
+            localStorage.setItem('hirusahan_auth', 'granted');
+            showWebsite();
+            console.log("Google Login Success:", user.email);
+            
+        } catch (error) {
+            // මොකක් හරි Error එකක් ආවොත් මේකෙන් බලාගන්න පුළුවන්
+            console.error("Google Auth Error:", error.code);
+            alert("Google Login Error: " + error.message);
+        }
+    }
+}function sendToWhatsApp() {
+    const weight = document.getElementById("weight-select").value;
+    const packets = document.getElementById("packet-count").value;
+    const finalPrice = document.getElementById("total-price-display").innerText;
+    const productName = currentProduct.name;
+
+    // ඔයාගේ WhatsApp අංකය මෙතනට දාන්න (උදා: 94771234567)
+    const myNumber = "94720191167"; 
+
+    // මැසේජ් එක ලස්සනට සකස් කරමු
+    const message = `*--- NEW ORDER: HIRUSAHAN PRODUCTS ---*%0A` +
+                    `*Product:* ${productName}%0A` +
+                    `*Weight:* ${weight}g%0A` +
+                    `*Packets:* ${packets}%0A` +
+                    `*Total Price:* LKR ${finalPrice}%0A` +
+                    `-----------------------------------%0A` +
+                    `කරුණාකර මගේ ඇණවුම තහවුරු කරන්න.`;
+
+    // WhatsApp Link එක සාදා විවෘත කිරීම
+    const whatsappURL = `https://wa.me/${myNumber}?text=${message}`;
+    window.open(whatsappURL, '_blank').focus();
 }
