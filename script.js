@@ -35,20 +35,28 @@ function secureLogout() {
 }
 // ඔබේ Firebase Config එක මෙතනට දාන්න
 const firebaseConfig = {
-    apiKey: "AIzaSyDoJDmPr_FTnIce2RCTCMB3xHOWvWeHf_4",
-    authDomain: "hirusahan-products.firebaseapp.com",
-    projectId: "hirusahan-products",
-    storageBucket: "hirusahan-products.firebasestorage.app",
-    messagingSenderId: "1030397143651",
-    appId: "1:1030397143651:web:3d433fc3317b57d2abe656"
+  apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
+  authDomain: "hirusahan.firebaseapp.com", // Screenshot (142) එකේ තිබෙන ආකාරයටම
+  projectId: "hirusahan",
+  storageBucket: "hirusahan.firebasestorage.app",
+  messagingSenderId: "249838072125",
+  appId: "1:249838072125:web:90f2331d89b98b75b01554",
+  measurementId: "G-F3YMBL1PM1"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
-function socialAuth(platform) {
-    console.log("Login started for:", platform); // මෙය Console එකේ වැටෙනවාද බලන්න
+let isAuthInProgress = false; // එකම වෙලාවේ දෙපාරක් ක්ලික් වීම වැලැක්වීමට
+
+async function socialAuth(platform) {
+    if (isAuthInProgress) return; // දැනටමත් වැඩේ සිද්ධ වෙනවා නම් ආයෙ කරන්න එපා
     
+    isAuthInProgress = true;
+    console.log("Login process started...");
+
     let provider;
     if (platform === 'Google') {
         provider = new firebase.auth.GoogleAuthProvider();
@@ -56,14 +64,18 @@ function socialAuth(platform) {
         provider = new firebase.auth.FacebookAuthProvider();
     }
 
-    firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-            console.log("Success!");
-            localStorage.setItem('hirusahan_auth', 'granted');
-            showWebsite();
-        })
-        .catch((error) => {
-            console.error("Full Error Info:", error); // වැරැද්ද මොකක්ද කියලා මෙතනින් බලාගන්න පුළුවන්
+    try {
+        const result = await firebase.auth().signInWithPopup(provider);
+        console.log("Login Success!");
+        localStorage.setItem('hirusahan_auth', 'granted');
+        showWebsite();
+    } catch (error) {
+        // "cancelled-popup-request" ආවොත් ඒක Error එකක් විදිහට පෙන්වන්න එපා
+        if (error.code !== 'auth/cancelled-popup-request') {
+            console.error("Auth Error:", error.message);
             alert("Error: " + error.message);
-        });
+        }
+    } finally {
+        isAuthInProgress = false; // අවසානයේ නැවත බටන් එක වැඩ කරන තත්වයට පත් කරන්න
+    }
 }
