@@ -6,6 +6,7 @@
     <title>Hirusahan Products | Secure Access</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -17,23 +18,34 @@
             
             <form id="authForm">
                 <input type="email" id="user-email" class="login-input" placeholder="Email Address" required>
-                <input type="password" id="user-pass" class="login-input" placeholder="Password" required>
+                
+                <div class="password-wrapper">
+                    <input type="password" id="user-pass" class="login-input" placeholder="Password" required autocomplete="current-password">
+                    <i class="fas fa-eye toggle-password" id="toggleEye" onclick="togglePasswordVisibility()"></i>
+                </div>
+
+                <div class="remember-me-container">
+                    <label class="cyber-checkbox">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                        Remember Me
+                    </label>
+                </div>
+
                 <button type="submit" class="login-btn">Login</button>
             </form>
+
             <div class="divider"><span>OR CONTINUE WITH</span></div>
 
-<div class="social-login">
-    <button type="button" class="social-btn google" onclick="socialAuth('Google')">
-        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google"> Google
-    </button>
-    <button type="button" class="social-btn facebook" onclick="socialAuth('Facebook')">
-        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="FB"> Facebook
-    </button>
-</div>
+            <div class="social-login">
+                <button type="button" class="social-btn google" onclick="socialAuth('Google')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google"> Google
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="main-website">
+    <div id="main-website" style="display: none;">
         <header>
             <div class="header-logo-area">
                 <img src="logo.png" alt="Logo" class="nav-logo-small">
@@ -51,26 +63,35 @@
 
         <section class="store-section">
             <h2 class="section-title">SECURE COLLECTION</h2>
-            <div class="product-grid">
-                <div class="product-card">
-                    <span class="product-img">🌶️</span>
-                    <h3>Premium Chili Powder</h3>
-                    <p class="price-tag">LKR 450.00</p>
-                    <button class="add-cart" onclick="alert('Item added to secure checkout!')">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <span class="product-img">🌿</span>
-                    <h3>Organic Turmeric</h3>
-                    <p class="price-tag">LKR 380.00</p>
-                    <button class="add-cart" onclick="alert('Item added to secure checkout!')">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <span class="product-img">🪵</span>
-                    <h3>Ceylon Cinnamon</h3>
-                    <p class="price-tag">LKR 950.00</p>
-                    <button class="add-cart" onclick="alert('Item added to secure checkout!')">Add to Cart</button>
-                </div>
-            </div>
+          <div class="product-grid">
+    <div class="product-card">
+        <div class="product-img-container">
+            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80" alt="Chili Powder" class="product-img-real">
+        </div>
+        <h3>Premium Chili Powder</h3>
+        <p class="price-tag">LKR 450.00</p>
+        <button class="add-cart" onclick="addToCart('Chili Powder', 450)">Add to Cart</button>
+    </div>
+
+    <div class="product-card">
+        <div class="product-img-container">
+            <img src="https://images.unsplash.com/photo-1615485242231-80781a6cb981?auto=format&fit=crop&w=500&q=80" alt="Turmeric" class="product-img-real">
+        </div>
+        <h3>Organic Turmeric</h3>
+        <p class="price-tag">LKR 380.00</p>
+        <button class="add-cart" onclick="addToCart('Organic Turmeric', 380)">Add to Cart</button>
+    </div>
+
+    <div class="product-card">
+        <div class="product-img-container">
+            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=500&q=80" alt="Cinnamon" class="product-img-real">
+        </div>
+        <h3>Ceylon Cinnamon</h3>
+        <p class="price-tag">LKR 950.00</p>
+        <button class="add-cart" onclick="addToCart('Ceylon Cinnamon', 950)">Add to Cart</button>
+        
+    </div>
+</div>
         </section>
 
         <footer>
@@ -78,10 +99,35 @@
         </footer>
     </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-
-<script src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="script.js"></script>
 </body>
-</html>
+</html><div id="qty-modal" class="modal">
+    <div class="modal-content cyberpunk-box">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h3 id="modal-product-name">SELECT QUANTITY</h3>
+        <p class="modal-subtext">Choose your weight and package count.</p>
+        
+        <div class="selection-row">
+    <label>Weight (Grams):</label>
+    <select id="weight-select" class="cyber-select" onchange="updateTotalPrice()">
+        <option value="50">50g</option>
+        <option value="100" selected>100g</option>
+        <option value="250">250g</option>
+        <option value="500">500g</option>
+    </select>
+</div>
+
+<div class="selection-row">
+    <label>No. of Packets:</label>
+    <input type="number" id="packet-count" class="cyber-input" value="1" min="1" oninput="updateTotalPrice()">
+</div>
+
+        <div class="price-display">
+            TOTAL: LKR <span id="total-price-display">0.00</span>
+        </div>
+
+        <button class="confirm-btn" onclick="addToFinalCart()">CONFIRM SELECTION</button>
+    </div>
+</div>
