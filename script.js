@@ -36,12 +36,11 @@ function secureLogout() {
 // ඔබේ Firebase Config එක මෙතනට දාන්න
 const firebaseConfig = {
   apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
-  authDomain: "hirusahan.firebaseapp.com", // Screenshot (142) එකේ තිබෙන ආකාරයටම
+  authDomain: "hirusahan.firebaseapp.com",
   projectId: "hirusahan",
   storageBucket: "hirusahan.firebasestorage.app",
   messagingSenderId: "249838072125",
   appId: "1:249838072125:web:90f2331d89b98b75b01554",
-  measurementId: "G-F3YMBL1PM1"
 };
 
 // Initialize Firebase
