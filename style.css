@@ -1,0 +1,150 @@
+:root {
+    --primary: #ff6600;
+    --secondary: #ffcc00;
+    --bg-dark: #050505;
+    --card-bg: rgba(20, 20, 20, 0.8);
+    --neon-glow: 0 0 15px rgba(255, 102, 0, 0.7);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-dark);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Login Screen Styles */
+#login-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.login-card {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 102, 0, 0.2);
+    text-align: center;
+}
+
+.login-logo { height: 90px; margin-bottom: 25px; filter: drop-shadow(var(--neon-glow)); }
+
+.login-card h2 { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+.login-card h2 span { color: var(--primary); }
+
+.login-subtext { color: #888; font-size: 0.8rem; margin-bottom: 20px; }
+
+.login-input {
+    width: 100%; padding: 14px; margin: 12px 0;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid #333;
+    color: #fff; border-radius: 10px; outline: none;
+}
+
+.login-input:focus { border-color: var(--primary); }
+
+.login-btn {
+    width: 100%; padding: 14px; background: var(--primary);
+    color: white; border: none; border-radius: 10px;
+    font-family: 'Orbitron'; cursor: pointer; margin-top: 20px;
+    box-shadow: var(--neon-glow);
+}
+
+/* Main Website Styles */
+#main-website { display: none; }
+
+header {
+    background: rgba(0, 0, 0, 0.95); padding: 15px 5%;
+    position: fixed; width: 100%; top: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+}
+
+.header-logo-area { display: flex; align-items: center; gap: 12px; }
+.nav-logo-small { height: 40px; border-radius: 50%; border: 1px solid var(--primary); }
+.brand-text { font-family: 'Orbitron'; font-weight: bold; font-size: 1.1rem; }
+
+.hero {
+    height: 60vh;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=1350&q=80');
+    background-size: cover; background-position: center;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+}
+
+.hero h1 { font-family: 'Orbitron'; font-size: 3rem; }
+.hero h1 span { color: var(--primary); text-shadow: var(--neon-glow); }
+
+.store-section { padding: 60px 5%; text-align: center; }
+.section-title { font-family: 'Orbitron'; }
+
+.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+
+.product-card {
+    background: var(--card-bg); padding: 30px; border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.4s;
+}
+
+.product-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: var(--neon-glow); }
+
+.product-img { font-size: 60px; margin-bottom: 20px; display: block; }
+.price-tag { color: var(--secondary); font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
+
+.add-cart {
+    width: 100%; padding: 10px; background: transparent;
+    border: 2px solid var(--primary); color: white; border-radius: 8px; cursor: pointer;
+}
+
+.logout-btn { background: #ff3333; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; }
+
+footer { text-align: center; padding: 40px; color: #444; }.divider {
+    margin: 20px 0;
+    border-bottom: 1px solid #333;
+    line-height: 0.1em;
+    text-align: center;
+}
+
+.divider span {
+    background: #151515; /* මේක ඔයාගේ Card එකේ Background එකට සමාන විය යුතුයි */
+    padding: 0 10px;
+    color: #666;
+    font-size: 0.7rem;
+    font-family: 'Orbitron';
+}
+
+.social-login {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.social-btn img { height: 18px; }
+
+.social-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ff6600; /* Primary Orange */
+}

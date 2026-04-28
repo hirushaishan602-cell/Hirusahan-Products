@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hirusahan Products | Secure Access</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-card">
+            <img src="logo.png" alt="Hirusahan Logo" class="login-logo">
+            <h2>CLIENT <span>LOGIN</span></h2>
+            <p class="login-subtext">Access Secured by Hirusahan Products.</p>
+            
+            <form id="authForm">
+                <input type="email" id="user-email" class="login-input" placeholder="Email Address" required>
+                <input type="password" id="user-pass" class="login-input" placeholder="Password" required>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="divider"><span>OR CONTINUE WITH</span></div>
+
+<div class="social-login">
+    <button type="button" class="social-btn google" onclick="socialAuth('Google')">
+        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google"> Google
+    </button>
+    <button type="button" class="social-btn facebook" onclick="socialAuth('Facebook')">
+        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="FB"> Facebook
+    </button>
+</div>
+        </div>
+    </div>
+
+    <div id="main-website">
+        <header>
+            <div class="header-logo-area">
+                <img src="logo.png" alt="Logo" class="nav-logo-small">
+                <span class="brand-text">HIRUSAHAN Products</span>
+            </div>
+            <button class="logout-btn" onclick="secureLogout()">LOGOUT</button>
+        </header>
+
+        <section class="hero">
+            <div class="hero-text">
+                <h1>PREMIUM <span>SPICES</span></h1>
+                <p>Pure Quality. High Precision. Authentically Sri Lankan.</p>
+            </div>
+        </section>
+
+        <section class="store-section">
+            <h2 class="section-title">SECURE COLLECTION</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <span class="product-img">🌶️</span>
+                    <h3>Premium Chili Powder</h3>
+                    <p class="price-tag">LKR 450.00</p>
+                    <button class="add-cart" onclick="alert('Item added to secure checkout!')">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <span class="product-img">🌿</span>
+                    <h3>Organic Turmeric</h3>
+                    <p class="price-tag">LKR 380.00</p>
+                    <button class="add-cart" onclick="alert('Item added to secure checkout!')">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <span class="product-img">🪵</span>
+                    <h3>Ceylon Cinnamon</h3>
+                    <p class="price-tag">LKR 950.00</p>
+                    <button class="add-cart" onclick="alert('Item added to secure checkout!')">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Hirusahan Products. Encrypted Client Access Only.</p>
+        </footer>
+    </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
