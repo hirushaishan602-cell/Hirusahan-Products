@@ -235,4 +235,20 @@ async function socialAuth(platform) {
         await auth.signInWithPopup(provider);
         handleSuccessAuth(auth.currentUser.email);
     } catch (error) { console.log(error); }
+}const messaging = firebase.messaging(authApp); // authApp යනු ඔබේ පළමු Firebase App එකයි
+
+async function requestNotificationPermission() {
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            // Token එකක් ලබා ගෙන Database එකේ Save කරගන්න පුළුවන් (පසුව අවශ්‍ය නම්)
+            const token = await messaging.getToken({ vapidKey: 'ඔබේ_VAPID_KEY_එක_මෙතැනට_දාන්න' });
+            console.log("Notification Token:", token);
+        }
+    } catch (error) {
+        console.error("Permission Error:", error);
+    }
 }
+
+// සයිට් එකට ආපු ගමන් Permission ඉල්ලන්න
+window.addEventListener('load', requestNotificationPermission);
