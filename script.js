@@ -1,3 +1,35 @@
+// --- CONFIGURATION START ---
+
+// 1. Project A (Authentication - දැනට පවතින එක)
+const authConfig = {
+  apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
+  authDomain: "hirusahan.firebaseapp.com",
+  projectId: "hirusahan",
+  storageBucket: "hirusahan.firebasestorage.app",
+  messagingSenderId: "249838072125",
+  appId: "1:249838072125:web:90f2331d89b98b75b01554"
+};
+
+// 2. Project B (Realtime Database - Screenshot 160 හි ඇති අලුත් එක)
+const dbConfig = {
+  apiKey: "AIzaSyBT9c1jMHhU_JD8n7-ImWFCDt40TbfzLX0",
+  authDomain: "stock-793e9.firebaseapp.com",
+  databaseURL: "https://stock-793e9-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "stock-793e9",
+  storageBucket: "stock-793e9.firebasestorage.app",
+  messagingSenderId: "91336977852",
+  appId: "1:91336977852:web:77e0821c73739b67744fb9"
+};
+
+// Initialize Firebase Projects
+const authApp = firebase.initializeApp(authConfig, "authApp");
+const dbApp = firebase.initializeApp(dbConfig, "dbApp");
+
+const auth = firebase.auth(authApp);
+const db = firebase.database(dbApp);
+
+// --- CONFIGURATION END ---
+
 const loginScreen = document.getElementById('login-screen');
 const mainWebsite = document.getElementById('main-website');
 const authForm = document.getElementById('authForm');
@@ -8,30 +40,19 @@ const togglePassword = document.getElementById('togglePassword');
 const rememberMeCheckbox = document.getElementById('remember-me');
 const loadingOverlay = document.getElementById('loading-overlay');
 
-const productData = [
-    { name: "Premium Chili Powder", img: "🌶️", price: 450 },
-    { name: "Organic Turmeric", img: "🌿", price: 380 },
-    { name: "Ceylon Cinnamon", img: "🪵", price: 950 },
-    { name: "Black Pepper Grains", img: "🧂", price: 620 },
-    { name: "Curry Powder (Mixed)", img: "🍂", price: 350 },
-    { name: "Nutmeg Spices", img: "🌰", price: 890 },
-    { name: "Cardamom Pods", img: "🍀", price: 1200 }
-];
-
 let orderList = [];
 
-// Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
-  authDomain: "hirusahan.firebaseapp.com",
-  projectId: "hirusahan",
-  storageBucket: "hirusahan.firebasestorage.app",
-  messagingSenderId: "249838072125",
-  appId: "1:249838072125:web:90f2331d89b98b75b01554",
-  measurementId: "G-F3YMBL1PM1"
-};
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+// Database එකෙන් items load කරන function එක
+function syncStock() {
+    db.ref('products').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            displayProducts(data);
+        } else {
+            document.getElementById('product-container').innerHTML = "<p>Loading products...</p>";
+        }
+    });
+}
 
 window.addEventListener('load', () => {
     const isAuth = localStorage.getItem('hirusahan_auth') === 'granted';
@@ -49,7 +70,7 @@ window.addEventListener('load', () => {
         emailField.value = savedEmail;
         rememberMeCheckbox.checked = true;
     }
-    displayProducts();
+    syncStock(); 
 });
 
 togglePassword.addEventListener('click', function () {
@@ -63,9 +84,7 @@ authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = emailField.value;
     const password = passwordField.value;
-    
     loadingOverlay.style.display = 'flex';
-
     try {
         await auth.signInWithEmailAndPassword(email, password);
         handleSuccessAuth(email);
@@ -76,18 +95,13 @@ authForm.addEventListener('submit', async (e) => {
                 handleSuccessAuth(email);
             } catch (regError) { alert("Error: " + regError.message); }
         } else { alert("Login Failed: " + error.message); }
-    } finally {
-        loadingOverlay.style.display = 'none';
-    }
+    } finally { loadingOverlay.style.display = 'none'; }
 });
 
 function handleSuccessAuth(email) {
     localStorage.setItem('hirusahan_auth', 'granted');
-    if (rememberMeCheckbox.checked) {
-        localStorage.setItem('remembered_email', email);
-    } else {
-        localStorage.removeItem('remembered_email');
-    }
+    if (rememberMeCheckbox.checked) localStorage.setItem('remembered_email', email);
+    else localStorage.removeItem('remembered_email');
     showWebsite();
 }
 
@@ -108,42 +122,63 @@ window.secureLogout = function() {
     location.reload(); 
 }
 
-function displayProducts() {
+function displayProducts(products) {
     const container = document.getElementById('product-container');
-    container.innerHTML = productData.map((p, index) => `
-        <div class="product-card">
-            <span class="product-img">${p.img}</span>
-            <h3>${p.name}</h3>
-            <div class="product-options">
-                <div class="option-group">
-                    <label>Weight:</label>
-                    <select id="weight-${index}" class="item-weight">
-                        <option value="0.5">50g</option>
-                        <option value="1" selected>100g</option>
-                        <option value="2.5">250g</option>
-                        <option value="5">500g</option>
-                    </select>
+    const productArray = Array.isArray(products) ? products : Object.values(products);
+    
+    container.innerHTML = productArray.map((p, index) => {
+        // 'instock' හෝ 'inStock' යන දෙකම පරීක්ෂා කිරීම
+        const stockValue = p.inStock !== undefined ? p.inStock : p.instock;
+        const isAvailable = String(stockValue).toLowerCase() === "true";
+        
+        const statusText = isAvailable ? "AVAILABLE" : "OUT OF STOCK";
+        const statusClass = isAvailable ? "status-available" : "status-out";
+        const isDisable = isAvailable ? "" : "disabled";
+
+        return `
+            <div class="product-card ${isAvailable ? '' : 'product-unavailable'}">
+                <div class="stock-badge ${statusClass}">${statusText}</div>
+                
+                <div class="product-img-container">
+                    ${p.img && (p.img.includes('/') || p.img.includes('.')) 
+                        ? `<img src="${p.img}" alt="${p.name}" class="product-image">` 
+                        : `<span class="product-emoji">${p.img || '📦'}</span>`}
                 </div>
-                <div class="option-group">
-                    <label>Packets:</label>
-                    <input type="number" id="qty-${index}" class="item-qty" value="1" min="1">
+
+                <h3>${p.name}</h3>
+                <div class="product-options">
+                    <div class="option-group">
+                        <label>Weight:</label>
+                        <select id="weight-${index}" class="item-weight" ${isDisable}>
+                            <option value="0.5">50g</option>
+                            <option value="1" selected>100g</option>
+                            <option value="2.5">250g</option>
+                            <option value="5">500g</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label>Packets:</label>
+                        <input type="number" id="qty-${index}" class="item-qty" value="1" min="1" ${isDisable}>
+                    </div>
                 </div>
+                <p class="price-tag">LKR ${p.price ? p.price.toFixed(2) : '0.00'} (100g)</p>
+                <button class="add-cart" onclick="addToListFromDB(${index}, '${p.name}', ${p.price})" ${isDisable}>
+                    ${isAvailable ? 'ADD TO LIST' : 'OUT OF STOCK'}
+                </button>
             </div>
-            <p class="price-tag">LKR ${p.price.toFixed(2)} (100g)</p>
-            <button class="add-cart" onclick="addToList(${index})">ADD TO LIST</button>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
-window.addToList = function(index) {
-    const product = productData[index];
+window.addToListFromDB = function(index, name, price) {
     const weightSelect = document.getElementById(`weight-${index}`);
     const weightMultiplier = parseFloat(weightSelect.value);
     const weightLabel = weightSelect.options[weightSelect.selectedIndex].text;
     const qty = parseInt(document.getElementById(`qty-${index}`).value);
+    
     if (qty < 1) return;
-    const subtotal = product.price * weightMultiplier * qty;
-    orderList.push({ name: product.name, weight: weightLabel, qty: qty, total: subtotal });
+    const subtotal = price * weightMultiplier * qty;
+    orderList.push({ name: name, weight: weightLabel, qty: qty, total: subtotal });
     updateOrderTable();
 };
 
