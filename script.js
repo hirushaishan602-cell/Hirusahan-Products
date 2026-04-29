@@ -82,20 +82,31 @@ togglePassword.addEventListener('click', function () {
 
 authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = emailField.value;
+    const email = emailField.value.trim(); // හිස්තැන් ඉවත් කරයි
     const password = passwordField.value;
+
     loadingOverlay.style.display = 'flex';
     try {
+        // මුලින්ම Login වීමට උත්සාහ කරයි
         await auth.signInWithEmailAndPassword(email, password);
         handleSuccessAuth(email);
     } catch (error) {
-        if (error.code === 'auth/user-not-found') {
+        console.log("Login Error Code:", error.code);
+        
+        // වැරදි credentials නම් හෝ user නැත්නම් අලුත් account එකක් සාදයි
+        if (error.code === 'auth/invalid-login-credentials' || error.code === 'auth/user-not-found') {
             try {
                 await auth.createUserWithEmailAndPassword(email, password);
                 handleSuccessAuth(email);
-            } catch (regError) { alert("Error: " + regError.message); }
-        } else { alert("Login Failed: " + error.message); }
-    } finally { loadingOverlay.style.display = 'none'; }
+            } catch (regError) {
+                alert("Registration Error: " + regError.message);
+            }
+        } else {
+            alert("Login Failed: " + error.message);
+        }
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
 });
 
 function handleSuccessAuth(email) {
