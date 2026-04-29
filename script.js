@@ -240,22 +240,32 @@ const messaging = firebase.messaging(authApp);
 
 async function requestNotificationPermission() {
     try {
-        // Notification අවසර ඉල්ලීම දැන් වැඩ කරනු ඇත
         const permission = await Notification.requestPermission();
         
         if (permission === 'granted') {
             console.log("Notification අවසර ලැබුණා!");
             
-            // මෙතැනට ඔබේ Firebase Console එකේ ඇති VAPID Key එක දාන්න
+            // getToken එක හරහා token එක ලබා ගැනීම
             const token = await messaging.getToken({ 
                 vapidKey: 'BH7KdzPiKwNhLvvAfdppx2qZXTxWtF47dTe-9NFO3Zs3fnSjBC9HS0JSsWa1AlAMNreIcpYsPo0EPrBNDIM-0vY' 
             });
-            console.log("Token:", token);
+
+            if (token) {
+                console.log("Token ලැබුණා:", token);
+                // Token එක ලැබුණු පසු එය Database එකට සේව් කරන function එක මෙතැනදී අමතන්න
+                saveTokenToDatabase(token); 
+            } else {
+                console.log("Token එකක් ලැබුණේ නැත.");
+            }
         }
     } catch (error) {
         console.error("Notification Error:", error);
     }
-}// මිල වෙනස් වූ විට Notification එකක් යැවීමට උත්සාහ කිරීම
+}
+
+// පිටුව Load වන විට මෙය ක්‍රියාත්මක කරන්න
+window.addEventListener('load', requestNotificationPermission);
+// මිල වෙනස් වූ විට Notification එකක් යැවීමට උත්සාහ කිරීම
 function sendPushNotification(name, newPrice, targetToken) {
     const serverKey = "ඔබේ_SERVER_KEY_එක"; // Firebase Console එකෙන් ගත්තු එක
 
