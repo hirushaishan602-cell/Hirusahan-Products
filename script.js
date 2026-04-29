@@ -242,7 +242,7 @@ async function requestNotificationPermission() {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
             // Token එකක් ලබා ගෙන Database එකේ Save කරගන්න පුළුවන් (පසුව අවශ්‍ය නම්)
-            const token = await messaging.getToken({ vapidKey: 'ඔබේ_VAPID_KEY_එක_මෙතැනට_දාන්න' });
+            const token = await messaging.getToken({ vapidKey: 'BH7KdzPiKwNhLvvAfdppx2qZXTxWtF47dTe-9NFO3Zs3fnSjBC9HS0JSsWa1AlAMNreIcpYsPo0EPrBNDIM-0vY' });
             console.log("Notification Token:", token);
         }
     } catch (error) {
