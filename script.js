@@ -280,4 +280,11 @@ function sendPushNotification(name, newPrice) {
     })
     .then(response => console.log("Push Sent:", response))
     .catch(error => console.error("Push Error:", error));
+}// දැනටමත් අවසර දී ඇත්නම් Token එක කෙලින්ම ලබා ගැනීමට
+if (Notification.permission === 'granted') {
+    const currentToken = await messaging.getToken({ vapidKey: 'BH7k...' }); // ඔබේ VAPID Key එක දාන්න
+    if (currentToken) {
+        console.log("දැනට පවතින Token එක:", currentToken);
+        alert("Token: " + currentToken);
+    }
 }
