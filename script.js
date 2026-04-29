@@ -27,7 +27,22 @@ const dbApp = firebase.initializeApp(dbConfig, "dbApp");
 
 const auth = firebase.auth(authApp);
 const db = firebase.database(dbApp);
-
+// Login බොත්තම එබූ විට
+async function handleLogin() {
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const userEmail = userCredential.user.email.replace(/\./g, '_');
+        
+        // Database එකේ ඉන්නවාද කියා බැලීම
+        const checkUser = await db.ref('users/' + userEmail).once('value');
+        if (!checkUser.exists()) {
+            throw new Error("ගිණුම පද්ධතියේ නැත.");
+        }
+    } catch (error) {
+        alert("Login Failed: " + error.message);
+        await auth.signOut();
+    }
+}
 // --- CONFIGURATION END ---
 
 const loginScreen = document.getElementById('login-screen');
