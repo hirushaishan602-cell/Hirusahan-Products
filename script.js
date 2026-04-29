@@ -208,7 +208,7 @@ window.sendToWhatsApp = function() {
         alert("ඔබේ Order List එක හිස්!");
         return;
     }
-    let phoneNumber = "947XXXXXXXX"; 
+    let phoneNumber = "94723961127"; 
     let message = "📦 *NEW ORDER - HIRUSAHAN PRODUCTS*\n\n";
     orderList.forEach((item, index) => {
         message += `*${index + 1}. ${item.name}*\n   Weight: ${item.weight}\n   Qty: ${item.qty} packets\n   Subtotal: LKR ${item.total.toFixed(2)}\n\n`;
