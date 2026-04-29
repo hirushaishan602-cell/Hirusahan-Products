@@ -27,34 +27,6 @@ const dbApp = firebase.initializeApp(dbConfig, "dbApp");
 
 const auth = firebase.auth(authApp);
 const db = firebase.database(dbApp);
-auth.onAuthStateChanged(async (user) => {
-    if (user) {
-        // User ලොග් වෙලා ඉන්නවා නම්, එයා ඇත්තටම Database එකේ ඉන්නවාද කියා පරීක්ෂා කිරීම
-        const userEmail = user.email.replace(/\./g, '_');
-        
-        try {
-            const snapshot = await db.ref('users/' + userEmail).once('value');
-            
-            if (snapshot.exists()) {
-                // User ඉන්නවා නම් විතරක් Store එක පෙන්වන්න
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('store-container').style.display = 'block';
-            } else {
-                // *** වැදගත්ම කොටස ***
-                // Database එකේ නැතිනම් වහාම Logout කරන්න
-                console.log("User deleted from DB. Force Logging out...");
-                await auth.signOut();
-                window.location.reload(); // පිටුව නැවත Load කරන්න
-            }
-        } catch (error) {
-            console.error("Auth check error:", error);
-        }
-    } else {
-        // ලොග් වී නැතිනම් Login පැනලය පෙන්වන්න
-        document.getElementById('login-container').style.display = 'block';
-        document.getElementById('store-container').style.display = 'none';
-    }
-});
 
 // --- CONFIGURATION END ---
 
