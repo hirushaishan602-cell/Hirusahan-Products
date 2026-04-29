@@ -255,4 +255,29 @@ async function requestNotificationPermission() {
     } catch (error) {
         console.error("Notification Error:", error);
     }
+}// මිල වෙනස් වූ විට Notification එකක් යැවීමට උත්සාහ කිරීම
+function sendPushNotification(name, newPrice) {
+    const serverKey = "YOUR_FIREBASE_SERVER_KEY"; // මෙය Firebase Console එකෙන් ගත යුතුය
+    const userToken = "ලැබුණු_TOKEN_එක_මෙතැනට_දාන්න"; // පරීක්ෂා කිරීමට පමණි
+
+    const message = {
+        notification: {
+            title: "Price Updated! 🔥",
+            body: `${name} දැන් අලුත් මිල LKR ${newPrice.toFixed(2)} කි.`,
+            icon: "logo.png",
+            click_action: "https://hirusahan-products.vercel.app"
+        },
+        to: userToken
+    };
+
+    fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'key=' + serverKey,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    })
+    .then(response => console.log("Push Sent:", response))
+    .catch(error => console.error("Push Error:", error));
 }
