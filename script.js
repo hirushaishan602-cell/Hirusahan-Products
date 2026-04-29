@@ -235,20 +235,24 @@ async function socialAuth(platform) {
         await auth.signInWithPopup(provider);
         handleSuccessAuth(auth.currentUser.email);
     } catch (error) { console.log(error); }
-}const messaging = firebase.messaging(authApp); // authApp යනු ඔබේ පළමු Firebase App එකයි
+}// මෙය Initialize App එකට පහළින් දාන්න
+const messaging = firebase.messaging(authApp); 
 
 async function requestNotificationPermission() {
     try {
+        // Notification අවසර ඉල්ලීම දැන් වැඩ කරනු ඇත
         const permission = await Notification.requestPermission();
+        
         if (permission === 'granted') {
-            // Token එකක් ලබා ගෙන Database එකේ Save කරගන්න පුළුවන් (පසුව අවශ්‍ය නම්)
-            const token = await messaging.getToken({ vapidKey: 'BH7KdzPiKwNhLvvAfdppx2qZXTxWtF47dTe-9NFO3Zs3fnSjBC9HS0JSsWa1AlAMNreIcpYsPo0EPrBNDIM-0vY' });
-            console.log("Notification Token:", token);
+            console.log("Notification අවසර ලැබුණා!");
+            
+            // මෙතැනට ඔබේ Firebase Console එකේ ඇති VAPID Key එක දාන්න
+            const token = await messaging.getToken({ 
+                vapidKey: 'BH7KdzPiKwNhLvvAfdppx2qZXTxWtF47dTe-9NFO3Zs3fnSjBC9HS0JSsWa1AlAMNreIcpYsPo0EPrBNDIM-0vY' 
+            });
+            console.log("Token:", token);
         }
     } catch (error) {
-        console.error("Permission Error:", error);
+        console.error("Notification Error:", error);
     }
 }
-
-// සයිට් එකට ආපු ගමන් Permission ඉල්ලන්න
-window.addEventListener('load', requestNotificationPermission);
