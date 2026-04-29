@@ -256,18 +256,16 @@ async function requestNotificationPermission() {
         console.error("Notification Error:", error);
     }
 }// මිල වෙනස් වූ විට Notification එකක් යැවීමට උත්සාහ කිරීම
-function sendPushNotification(name, newPrice) {
-    const serverKey = "YOUR_FIREBASE_SERVER_KEY"; // මෙය Firebase Console එකෙන් ගත යුතුය
-    const userToken = "ලැබුණු_TOKEN_එක_මෙතැනට_දාන්න"; // පරීක්ෂා කිරීමට පමණි
+function sendPushNotification(name, newPrice, targetToken) {
+    const serverKey = "ඔබේ_SERVER_KEY_එක"; // Firebase Console එකෙන් ගත්තු එක
 
     const message = {
         notification: {
             title: "Price Updated! 🔥",
             body: `${name} දැන් අලුත් මිල LKR ${newPrice.toFixed(2)} කි.`,
-            icon: "logo.png",
-            click_action: "https://hirusahan-products.vercel.app"
+            icon: "logo.png"
         },
-        to: userToken
+        to: targetToken // මෙතැනට දැන් auto ලැබෙන token එක වැටේ
     };
 
     fetch('https://fcm.googleapis.com/fcm/send', {
@@ -280,11 +278,30 @@ function sendPushNotification(name, newPrice) {
     })
     .then(response => console.log("Push Sent:", response))
     .catch(error => console.error("Push Error:", error));
-}// දැනටමත් අවසර දී ඇත්නම් Token එක කෙලින්ම ලබා ගැනීමට
-if (Notification.permission === 'granted') {
-    const currentToken = await messaging.getToken({ vapidKey: 'BH7k...' }); // ඔබේ VAPID Key එක දාන්න
-    if (currentToken) {
-        console.log("දැනට පවතින Token එක:", currentToken);
-        alert("Token: " + currentToken);
-    }
+}async function saveTokenToDatabase(token) {
+    const userEmail = auth.currentUser ? auth.currentUser.email.replace(/\./g, '_') : 'guest';
+    // Database එකේ tokens කියන තැන email එක යටතේ token එක සේව් කරයි
+    await db.ref('fcm_tokens/' + userEmail).set({
+        token: token,
+        last_updated: Date.now()
+    });
+}
+
+// requestNotificationPermission ඇතුළේ token එක ලැබුණු පසුව මෙය Call කරන්න
+if (token) {
+    saveTokenToDatabase(token);
+}function watchPriceChanges() {
+    db.ref('products').on('child_changed', (snapshot) => {
+        const updatedProduct = snapshot.val();
+        
+        // Database එකේ ඉන්න හැමෝගෙම Tokens අරගෙන notification එක යවමු
+        db.ref('fcm_tokens').once('value', (tokenSnapshot) => {
+            const allTokens = tokenSnapshot.val();
+            if (allTokens) {
+                Object.values(allTokens).forEach(userObject => {
+                    sendPushNotification(updatedProduct.name, updatedProduct.price, userObject.token);
+                });
+            }
+        });
+    });
 }
