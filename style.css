@@ -250,4 +250,20 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
 
 .product-emoji {
     font-size: 4rem;
+}/* Brand Tagline Style */
+.brand-tagline {
+    font-family: 'Rajdhani', sans-serif; /* කලින් පාවිච්චි කළ Font එකමයි */
+    font-size: 0.7rem; /* ඉතා කුඩාවට පෙනීමට */
+    letter-spacing: 3px; /* අකුරු අතර පරතරය */
+    color: rgba(255, 102, 0, 0.8); /* තැඹිලි පාට (Primary Color) */
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+    text-shadow: 0 0 8px rgba(255, 102, 0, 0.4); /* කුඩා Glow එකක් */
+}
+
+.tm-symbol {
+    font-size: 0.5rem;
+    vertical-align: super;
+    opacity: 0.7;
 }
