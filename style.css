@@ -67,7 +67,7 @@ header {
     border-bottom: 1px solid rgba(255, 102, 0, 0.2);
 }
 
-.brand-text { font-family: var(--font-heading); font-weight: 700; color: #fff; }
+.brand-text { font-family: var(--font-heading); font-weight: 700; color: #ff7b00; }
 .nav-logo-small { height: 35px; border-radius: 50%; border: 1px solid var(--primary); }
 
 .hero {
@@ -371,4 +371,26 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     align-items: center;
     gap: 5px;
     box-shadow: 0 0 10px rgba(192, 192, 192, 0.8);
+}/* වෙබ් අඩවිය දිස්වන විට සිදුවන Animation එක */
+@keyframes siteReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.reveal-animate {
+    animation: siteReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Loading Overlay එක සඳහා පෙනුම */
+#loading-overlay {
+    background: radial-gradient(circle, #1a1a1a 0%, #000 100%) !important;
+    transition: opacity 0.5s ease-out;
 }

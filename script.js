@@ -164,7 +164,7 @@ function displayProducts(products) {
             <div class="product-card ${isAvailable ? '' : 'product-unavailable'} ${saleClass}" style="position: relative;">
                 
                 <!-- Gold Label එක (Fire Emoji සමඟ) -->
-                ${isGold ? `<div class="best-sale-badge">🔥 BEST SALE</div>` : ''}
+                ${isGold ? `<div class="best-sale-badge"><i class="fas fa-fire"></i> BEST SALE</div>` : ''}
                 
                 <!-- Silver Label එක (Star Emoji සමඟ) -->
                 ${isSilver ? `<div class="silver-sale-badge">⭐ TOP RATED</div>` : ''}
