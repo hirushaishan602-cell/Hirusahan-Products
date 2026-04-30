@@ -371,26 +371,35 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     align-items: center;
     gap: 5px;
     box-shadow: 0 0 10px rgba(192, 192, 192, 0.8);
-}/* වෙබ් අඩවිය දිස්වන විට සිදුවන Animation එක */
-@keyframes siteReveal {
+}/* Header එකේ නම පාවී එන Animation එක */
+.brand-text {
+    display: inline-block;
+    animation: slideInLeft 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideInLeft {
     0% {
         opacity: 0;
-        transform: translateY(20px);
-        filter: blur(10px);
+        transform: translateX(-30px);
+        filter: blur(5px);
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
         filter: blur(0);
     }
-}
+}/* Mobile Phones සඳහා විශේෂ සැකසුම් */
+@media (max-width: 600px) {
+    .header-logo-area {
+        gap: 8px !important; /* Logo එක සහ නම අතර පරතරය අඩු කරයි */
+    }
 
-.reveal-animate {
-    animation: siteReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
+    .brand-text {
+        font-size: 1.3rem !important; /* Phone එකේදී නම මදක් කුඩා කරයි */
+        white-space: nowrap; /* නම පේළි දෙකකට කැඩීම වළක්වයි */
+    }
 
-/* Loading Overlay එක සඳහා පෙනුම */
-#loading-overlay {
-    background: radial-gradient(circle, #1a1a1a 0%, #000 100%) !important;
-    transition: opacity 0.5s ease-out;
+    .nav-logo-small {
+        height: 30px !important; /* Logo එක මදක් කුඩා කරයි */
+    }
 }
