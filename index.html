@@ -69,7 +69,7 @@
             <div id="product-container" class="product-grid"></div>
         </section>
 
-        <section class="order-list-section">
+        <section id="order-section" class="order-list-section">
             <h2 class="section-title">YOUR <span>ORDER LIST</span></h2>
             <div class="order-container">
                 <table id="orderTable">
@@ -86,16 +86,18 @@
                 </table>
                 <div class="total-area">
                     <h3>TOTAL: LKR <span id="grandTotal">0.00</span></h3>
+                    
+                    <!-- Customer Details Form -->
+                    <div id="customer-details" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid #333; margin-top: 20px; text-align: left;">
+                        <h4 style="color: #00ffff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem;">Customer Information</h4>
+                        <input type="text" id="cust-name" placeholder="Full Name" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
+                        <input type="text" id="cust-address" placeholder="Delivery Address" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
+                        <input type="tel" id="cust-phone" placeholder="Phone Number" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
+                    </div>
+
                     <button class="whatsapp-btn" onclick="sendToWhatsApp()">
                         <i class="fab fa-whatsapp"></i> SEND VIA WHATSAPP
                     </button>
-                    <!-- Customer Details Form -->
-<div id="customer-details" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid #333; margin-top: 20px;">
-    <h4 style="color: #00ffff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">Customer Information</h4>
-    <input type="text" id="cust-name" placeholder="Full Name" style="width: 100%; padding: 8px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff;">
-    <input type="text" id="cust-address" placeholder="Delivery Address" style="width: 100%; padding: 8px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff;">
-    <input type="tel" id="cust-phone" placeholder="Phone Number" style="width: 100%; padding: 8px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff;">
-</div>
                 </div>
             </div>
         </section>
@@ -103,6 +105,12 @@
         <footer>
             <p>&copy; 2026 Hirusahan Products. All Rights Reserved.</p>
         </footer>
+    </div>
+
+    <!-- Floating Cart Icon -->
+    <div id="floating-cart" onclick="scrollToOrderTable()" style="position: fixed; bottom: 20px; right: 20px; background: #ff6600; color: white; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 0 15px rgba(255, 102, 0, 0.6); z-index: 1000; transition: 0.3s;">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-dot-count" style="position: absolute; top: 0; right: 0; background: #00ffff; color: #000; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #000;">0</span>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
