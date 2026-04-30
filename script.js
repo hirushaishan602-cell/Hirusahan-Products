@@ -146,17 +146,28 @@ function displayProducts(products) {
     const container = document.getElementById('product-container');
     if(!container) return;
     const productArray = Array.isArray(products) ? products : Object.values(products);
+    
     container.innerHTML = productArray.map((p, index) => {
         const stockValue = p.inStock !== undefined ? p.inStock : p.instock;
         const isAvailable = String(stockValue).toLowerCase() === "true";
+        
+        // Database එකේ isBestSale: true නම් පමණක් මෙය ක්‍රියාත්මක වේ
+        const isBestSale = p.isBestSale === true || String(p.isBestSale).toLowerCase() === "true";
+
         return `
-            <div class="product-card ${isAvailable ? '' : 'product-unavailable'}" style="position: relative;">
+            <div class="product-card ${isAvailable ? '' : 'product-unavailable'} ${isBestSale ? 'best-sale-card' : ''}" style="position: relative;">
+                
+                <!-- Best Sale ලේබලය පෙන්වීම -->
+                ${isBestSale ? `<div class="best-sale-badge"><i class="fas fa-fire"></i> BEST SALE</div>` : ''}
+                
                 ${!isAvailable ? `<div class="stock-badge status-out">OUT OF STOCK</div>` : ''}
+                
                 <div class="product-img-container">
                     ${p.img && (p.img.includes('/') || p.img.includes('.')) 
                         ? `<img src="${p.img}" alt="${p.name}" class="product-image">` 
                         : `<span class="product-emoji">${p.img || '📦'}</span>`}
                 </div>
+                
                 <h3>${p.name}</h3>
                 <div class="product-options">
                     <div class="option-group">
@@ -173,7 +184,9 @@ function displayProducts(products) {
                         <input type="number" id="qty-${index}" class="item-qty" value="1" min="1" ${isAvailable ? '' : 'disabled'}>
                     </div>
                 </div>
+                
                 <p class="price-tag">LKR ${p.price ? p.price.toFixed(2) : '0.00'} (100g)</p>
+                
                 <button class="add-cart" onclick="addToListFromDB(${index}, '${p.name}', ${p.price})" ${isAvailable ? '' : 'disabled'}>
                     ${isAvailable ? 'ADD TO LIST' : 'OUT OF STOCK'}
                 </button>
@@ -181,7 +194,6 @@ function displayProducts(products) {
         `;
     }).join('');
 }
-
 // Order Management
 window.addToListFromDB = function(index, name, price) {
     const weightSelect = document.getElementById(`weight-${index}`);

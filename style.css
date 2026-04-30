@@ -273,4 +273,44 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     font-weight: 700;
     letter-spacing: 0px; /* අකුරු අතර දුර අඩු කරයි */
     color: var(--secondary); /* ඔබේ මුල් වර්ණයම තබා ගනී */
+}/* Best Sale Card එක සඳහා Fire Animation එක */
+.best-sale-card {
+    border: 2px solid #ffcc00 !important;
+    position: relative;
+    overflow: hidden;
+    /* ගින්දර වර්ණයෙන් යුත් සෙවනැල්ලක් (Glowing effect) */
+    box-shadow: 0 0 10px #ff4500, 0 0 20px #ffae00 !important;
+    animation: fire-glow 1.5s infinite alternate;
+}
+
+/* Fire Glow Animation එක */
+@keyframes fire-glow {
+    0% {
+        box-shadow: 0 0 10px #ff4500, 0 0 20px #ffae00;
+        border-color: #ff4500;
+    }
+    100% {
+        box-shadow: 0 0 20px #ff8c00, 0 0 40px #ffea00;
+        border-color: #ffcc00;
+    }
+}
+
+/* Best Sale Badge එකට ගින්දර වර්ණ ලබා දීම */
+.best-sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(45deg, #ff4500, #ffcc00);
+    color: #fff;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    border-radius: 5px;
+    z-index: 5;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
