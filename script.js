@@ -173,7 +173,7 @@ function displayProducts(products) {
                         <input type="number" id="qty-${index}" class="item-qty" value="1" min="1" ${isAvailable ? '' : 'disabled'}>
                     </div>
                 </div>
-                <p class="price-tag">LKR ${p.price ? p.price.toFixed(2) : '0.00'}</p>
+                <p class="price-tag">LKR ${p.price ? p.price.toFixed(2) : '0.00'} (100g)</p>
                 <button class="add-cart" onclick="addToListFromDB(${index}, '${p.name}', ${p.price})" ${isAvailable ? '' : 'disabled'}>
                     ${isAvailable ? 'ADD TO LIST' : 'OUT OF STOCK'}
                 </button>
