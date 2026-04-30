@@ -1,6 +1,6 @@
 // --- CONFIGURATION START ---
 
-// 1. Project A (Authentication - දැනට පවතින එක)
+// 1. Project A (Authentication)
 const authConfig = {
   apiKey: "AIzaSyCBu7ffSNMSvrbtOCn6PL9Xhd_XLxneGjI",
   authDomain: "hirusahan.firebaseapp.com",
@@ -10,7 +10,7 @@ const authConfig = {
   appId: "1:249838072125:web:90f2331d89b98b75b01554"
 };
 
-// 2. Project B (Realtime Database - Screenshot 160 හි ඇති අලුත් එක)
+// 2. Project B (Realtime Database)
 const dbConfig = {
   apiKey: "AIzaSyBT9c1jMHhU_JD8n7-ImWFCDt40TbfzLX0",
   authDomain: "stock-793e9.firebaseapp.com",
@@ -21,7 +21,10 @@ const dbConfig = {
   appId: "1:91336977852:web:77e0821c73739b67744fb9"
 };
 
-// Initialize Firebase Projects
+// මුලින්ම පවතින Firebase instance තිබේදැයි බලා පිරිසිදු කිරීම
+if (!firebase.apps.length) {
+    firebase.initializeApp(authConfig);
+}
 const authApp = firebase.initializeApp(authConfig, "authApp");
 const dbApp = firebase.initializeApp(dbConfig, "dbApp");
 
@@ -30,6 +33,7 @@ const db = firebase.database(dbApp);
 
 // --- CONFIGURATION END ---
 
+// HTML Elements
 const loginScreen = document.getElementById('login-screen');
 const mainWebsite = document.getElementById('main-website');
 const authForm = document.getElementById('authForm');
@@ -40,74 +44,78 @@ const togglePassword = document.getElementById('togglePassword');
 const rememberMeCheckbox = document.getElementById('remember-me');
 const loadingOverlay = document.getElementById('loading-overlay');
 
-let orderList = [];
+let orderList = []; // [cite: 1]
 
-// Database එකෙන් items load කරන function එක
+// Stock Sync[cite: 1]
 function syncStock() {
     db.ref('products').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
             displayProducts(data);
         } else {
-            document.getElementById('product-container').innerHTML = "<p>Loading products...</p>";
+            const container = document.getElementById('product-container');
+            if(container) container.innerHTML = "<p>Loading products...</p>";
         }
     });
 }
 
+// Initialization[cite: 1]
 window.addEventListener('load', () => {
     const isAuth = localStorage.getItem('hirusahan_auth') === 'granted';
     const savedEmail = localStorage.getItem('remembered_email');
 
     if (isAuth && savedEmail) {
-        authForm.style.display = 'none';
-        reAuthContainer.style.display = 'block';
+        if(authForm) authForm.style.display = 'none';
+        if(reAuthContainer) reAuthContainer.style.display = 'block';
     } else {
-        authForm.style.display = 'block';
-        reAuthContainer.style.display = 'none';
+        if(authForm) authForm.style.display = 'block';
+        if(reAuthContainer) reAuthContainer.style.display = 'none';
     }
 
-    if (savedEmail) {
+    if (savedEmail && emailField) {
         emailField.value = savedEmail;
         rememberMeCheckbox.checked = true;
     }
     syncStock(); 
 });
 
-togglePassword.addEventListener('click', function () {
-    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordField.setAttribute('type', type);
-    this.classList.toggle('fa-eye');
-    this.classList.toggle('fa-eye-slash');
-});
+// Password Toggle[cite: 1]
+if(togglePassword) {
+    togglePassword.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+}
 
-authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = emailField.value.trim(); // හිස්තැන් ඉවත් කරයි
-    const password = passwordField.value;
+// Authentication Logic[cite: 1]
+if(authForm) {
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = emailField.value.trim(); 
+        const password = passwordField.value;
 
-    loadingOverlay.style.display = 'flex';
-    try {
-        // මුලින්ම Login වීමට උත්සාහ කරයි
-        await auth.signInWithEmailAndPassword(email, password);
-        handleSuccessAuth(email);
-    } catch (error) {
-        console.log("Login Error Code:", error.code);
-        
-        // වැරදි credentials නම් හෝ user නැත්නම් අලුත් account එකක් සාදයි
-        if (error.code === 'auth/invalid-login-credentials' || error.code === 'auth/user-not-found') {
-            try {
-                await auth.createUserWithEmailAndPassword(email, password);
-                handleSuccessAuth(email);
-            } catch (regError) {
-                alert("Registration Error: " + regError.message);
+        if(loadingOverlay) loadingOverlay.style.display = 'flex';
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+            handleSuccessAuth(email);
+        } catch (error) {
+            if (error.code === 'auth/invalid-login-credentials' || error.code === 'auth/user-not-found') {
+                try {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                    handleSuccessAuth(email);
+                } catch (regError) {
+                    alert("Registration Error: " + regError.message);
+                }
+            } else {
+                alert("Login Failed: " + error.message);
             }
-        } else {
-            alert("Login Failed: " + error.message);
+        } finally {
+            if(loadingOverlay) loadingOverlay.style.display = 'none';
         }
-    } finally {
-        loadingOverlay.style.display = 'none';
-    }
-});
+    });
+}
 
 function handleSuccessAuth(email) {
     localStorage.setItem('hirusahan_auth', 'granted');
@@ -117,8 +125,8 @@ function handleSuccessAuth(email) {
 }
 
 function showWebsite() {
-    loginScreen.style.display = 'none';
-    mainWebsite.style.display = 'block';
+    if(loginScreen) loginScreen.style.display = 'none';
+    if(mainWebsite) mainWebsite.style.display = 'block';
 }
 
 window.clearSavedSession = function() {
@@ -133,12 +141,14 @@ window.secureLogout = function() {
     location.reload(); 
 }
 
+// Display Products[cite: 1]
 function displayProducts(products) {
     const container = document.getElementById('product-container');
+    if(!container) return;
+    
     const productArray = Array.isArray(products) ? products : Object.values(products);
     
     container.innerHTML = productArray.map((p, index) => {
-        // 'instock' හෝ 'inStock' යන දෙකම පරීක්ෂා කිරීම
         const stockValue = p.inStock !== undefined ? p.inStock : p.instock;
         const isAvailable = String(stockValue).toLowerCase() === "true";
         
@@ -149,13 +159,11 @@ function displayProducts(products) {
         return `
             <div class="product-card ${isAvailable ? '' : 'product-unavailable'}">
                 <div class="stock-badge ${statusClass}">${statusText}</div>
-                
                 <div class="product-img-container">
                     ${p.img && (p.img.includes('/') || p.img.includes('.')) 
                         ? `<img src="${p.img}" alt="${p.name}" class="product-image">` 
                         : `<span class="product-emoji">${p.img || '📦'}</span>`}
                 </div>
-
                 <h3>${p.name}</h3>
                 <div class="product-options">
                     <div class="option-group">
@@ -181,11 +189,16 @@ function displayProducts(products) {
     }).join('');
 }
 
+// Order Management[cite: 1]
 window.addToListFromDB = function(index, name, price) {
     const weightSelect = document.getElementById(`weight-${index}`);
+    const qtyInput = document.getElementById(`qty-${index}`);
+    
+    if(!weightSelect || !qtyInput) return;
+    
     const weightMultiplier = parseFloat(weightSelect.value);
     const weightLabel = weightSelect.options[weightSelect.selectedIndex].text;
-    const qty = parseInt(document.getElementById(`qty-${index}`).value);
+    const qty = parseInt(qtyInput.value);
     
     if (qty < 1) return;
     const subtotal = price * weightMultiplier * qty;
@@ -196,6 +209,7 @@ window.addToListFromDB = function(index, name, price) {
 function updateOrderTable() {
     const tableBody = document.getElementById('orderItems');
     if(!tableBody) return;
+    
     tableBody.innerHTML = orderList.map((item, index) => `
         <tr>
             <td>${item.name}</td>
@@ -205,8 +219,10 @@ function updateOrderTable() {
             <td><button class="remove-item" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button></td>
         </tr>
     `).join('');
+    
     const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
-    document.getElementById('grandTotal').innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+    const totalDisplay = document.getElementById('grandTotal');
+    if(totalDisplay) totalDisplay.innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
 }
 
 window.removeItem = function(index) {
@@ -214,18 +230,32 @@ window.removeItem = function(index) {
     updateOrderTable();
 };
 
+// Professional WhatsApp Invoice System
 window.sendToWhatsApp = function() {
     if (orderList.length === 0) {
         alert("ඔබේ Order List එක හිස්!");
         return;
     }
-    let phoneNumber = "94723961127"; 
-    let message = "📦 *NEW ORDER - HIRUSAHAN PRODUCTS*\n\n";
+    
+    const phoneNumber = "94723961127"; 
+    
+    let message = "━━━━━━━━━━━━━━━━━━━━━━\n";
+    message += "   *HIRUSAHAN PRODUCTS - INVOICE*   \n";
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n";
+    message += `📅 Date: ${new Date().toLocaleDateString()}\n\n`;
+    
+    message += "*ORDER ITEMS:*\n";
     orderList.forEach((item, index) => {
-        message += `*${index + 1}. ${item.name}*\n   Weight: ${item.weight}\n   Qty: ${item.qty} packets\n   Subtotal: LKR ${item.total.toFixed(2)}\n\n`;
+        message += `${index + 1}. *${item.name}*\n`;
+        message += `   (${item.weight} x ${item.qty} packets) - LKR ${item.total.toFixed(2)}\n`;
     });
+
     const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
-    message += `*GRAND TOTAL: LKR ${grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}*`;
+    message += "\n━━━━━━━━━━━━━━━━━━━━━━\n";
+    message += `*TOTAL AMOUNT: LKR ${grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}*\n`;
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    message += "✅ Please confirm my order. Thank you!";
+    
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
 };
 
