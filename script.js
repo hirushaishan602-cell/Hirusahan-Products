@@ -230,26 +230,51 @@ window.removeItem = function(index) {
     updateOrderTable();
 };
 
-// Professional WhatsApp Invoice System
+// --- CONFIGURATION කොටස ඔබ සතු මුල් කේතයම මෙතනට දාන්න ---[cite: 1]
+
+// ... (මුල් කේතයේ ඇති displayProducts, syncStock වැනි function සියල්ල එලෙසම තබන්න)[cite: 1]
+
+// --- PROFESSIONAL INVOICE WITH CUSTOMER DETAILS ---
 window.sendToWhatsApp = function() {
     if (orderList.length === 0) {
         alert("ඔබේ Order List එක හිස්!");
         return;
     }
+
+    // පාරිභෝගික විස්තර ලබා ගැනීම
+    const name = document.getElementById('cust-name').value.trim();
+    const address = document.getElementById('cust-address').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+
+    if (!name || !address || !phone) {
+        alert("කරුණාකර ඔබගේ නම, ලිපිනය සහ දුරකථන අංකය ඇතුළත් කරන්න.");
+        return;
+    }
     
-    const phoneNumber = "94723961127"; 
+    let phoneNumber = "94723961127"; 
     
+    // Header Section
     let message = "━━━━━━━━━━━━━━━━━━━━━━\n";
     message += "   *HIRUSAHAN PRODUCTS - INVOICE*   \n";
     message += "━━━━━━━━━━━━━━━━━━━━━━\n";
-    message += `📅 Date: ${new Date().toLocaleDateString()}\n\n`;
+    message += `📅 Date: ${new Date().toLocaleDateString()}\n`;
     
+    // Customer Details (මෙය Invoice එකේ පෙන්වන ආකාරය)
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n";
+    message += `👤 *CUSTOMER DETAILS:*\n`;
+    message += `Name: ${name}\n`;
+    message += `Address: ${address}\n`;
+    message += `Phone: ${phone}\n`;
+    message += "━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    
+    // Order Items Section
     message += "*ORDER ITEMS:*\n";
     orderList.forEach((item, index) => {
         message += `${index + 1}. *${item.name}*\n`;
         message += `   (${item.weight} x ${item.qty} packets) - LKR ${item.total.toFixed(2)}\n`;
     });
 
+    // Grand Total Section
     const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
     message += "\n━━━━━━━━━━━━━━━━━━━━━━\n";
     message += `*TOTAL AMOUNT: LKR ${grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}*\n`;
@@ -259,10 +284,4 @@ window.sendToWhatsApp = function() {
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
 };
 
-async function socialAuth(platform) {
-    let provider = new firebase.auth.GoogleAuthProvider();
-    try {
-        await auth.signInWithPopup(provider);
-        handleSuccessAuth(auth.currentUser.email);
-    } catch (error) { console.log(error); }
-}
+// ... (ඉතිරි මුල් කේතය එලෙසම පවතිනු ඇත)[cite: 1]
