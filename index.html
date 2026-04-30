@@ -5,15 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Google සෙවුම් ප්‍රතිඵල සඳහා අවශ්‍ය වෙනස්කම් -->
     <title>Hirusahan Products | Premium Sri Lankan Spices</title>
     <meta name="description" content="Experience the pure quality of authentic Sri Lankan spices. Hirusahan Products offers premium quality Spices with high precision and flavor.">
     
-    <!-- Logo එක සෙවුම් ප්‍රතිඵලවල පෙන්වීමට (Favicon) -->
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="apple-touch-icon" href="logo.png">
 
-    <!-- Vercel වෙනුවට Brand Name එක පෙන්වීමට Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -25,7 +22,9 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Orbitron සහ අනෙකුත් Fonts සම්බන්ධ කිරීම -->
+    <!-- කලින් තිබූ fonts සමඟ Satisfy font එක එකතු කළ ආකාරය -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&family=Satisfy&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="loading-overlay" style="display: none;">
@@ -68,16 +67,17 @@
 
     <div id="main-website">
         <header>
-            <div class="header-logo-area">
+            <div class="header-logo-area" style="display: flex; align-items: center; gap: 12px;">
                 <img src="logo.png" alt="Logo" class="nav-logo-small">
-                <span class="brand-text">HIRUSAHAN PRODUCTS</span>
+                <!-- ලෝගෝ එකේ Font එකම ලබා දීම -->
+                <span class="brand-text" style="font-family: 'Satisfy', cursive; font-size: 1.4rem; letter-spacing: 1px; font-weight: normal; text-transform: none;">Hirusahan Products</span>
             </div>
             <button class="logout-btn" onclick="secureLogout()">LOGOUT</button>
         </header>
 
         <section class="hero">
             <div class="hero-text">
-                <h1>PREMIUM <span>SPICES</span></h1>
+                <h1 style="font-family: 'Orbitron', sans-serif;">PREMIUM <span>SPICES</span></h1>
                 <p>Pure Quality. High Precision. Authentically Sri Lankan.</p>
             </div>
         </section>
@@ -86,6 +86,8 @@
             <h2 class="section-title">FLAVOUR COLLECTION</h2>
             <div id="product-container" class="product-grid"></div>
         </section>
+
+        <!-- ... ඉතිරි කොටස පෙර පරිදිම පවතී ... -->
 
         <section id="order-section" class="order-list-section">
             <h2 class="section-title">YOUR <span>ORDER LIST</span></h2>
