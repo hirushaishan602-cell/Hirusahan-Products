@@ -151,14 +151,23 @@ function displayProducts(products) {
         const stockValue = p.inStock !== undefined ? p.inStock : p.instock;
         const isAvailable = String(stockValue).toLowerCase() === "true";
         
-        // Database එකේ isBestSale: true නම් පමණක් මෙය ක්‍රියාත්මක වේ
-        const isBestSale = p.isBestSale === true || String(p.isBestSale).toLowerCase() === "true";
+        // Database එකේ දත්ත පරීක්ෂා කිරීම
+        const isGold = p.isBestSale === true || String(p.isBestSale).toLowerCase() === "true";
+        const isSilver = p.isSilverSale === true || String(p.isSilverSale).toLowerCase() === "true";
+
+        // Card එකට දිය යුතු Class එක තීරණය කිරීම
+        let saleClass = "";
+        if (isGold) saleClass = "best-sale-card";
+        else if (isSilver) saleClass = "silver-sale-card";
 
         return `
-            <div class="product-card ${isAvailable ? '' : 'product-unavailable'} ${isBestSale ? 'best-sale-card' : ''}" style="position: relative;">
+            <div class="product-card ${isAvailable ? '' : 'product-unavailable'} ${saleClass}" style="position: relative;">
                 
-                <!-- Best Sale ලේබලය පෙන්වීම -->
-                ${isBestSale ? `<div class="best-sale-badge"><i class="fas fa-fire"></i> BEST SALE</div>` : ''}
+                <!-- Gold Label එක (Fire Emoji සමඟ) -->
+                ${isGold ? `<div class="best-sale-badge">🔥 BEST SALE</div>` : ''}
+                
+                <!-- Silver Label එක (Star Emoji සමඟ) -->
+                ${isSilver ? `<div class="silver-sale-badge">⭐ TOP RATED</div>` : ''}
                 
                 ${!isAvailable ? `<div class="stock-badge status-out">OUT OF STOCK</div>` : ''}
                 
@@ -185,6 +194,7 @@ function displayProducts(products) {
                     </div>
                 </div>
                 
+                <!-- ඔබ ඉල්ලූ (100g) සහිත මිල පේළිය -->
                 <p class="price-tag">LKR ${p.price ? p.price.toFixed(2) : '0.00'} (100g)</p>
                 
                 <button class="add-cart" onclick="addToListFromDB(${index}, '${p.name}', ${p.price})" ${isAvailable ? '' : 'disabled'}>

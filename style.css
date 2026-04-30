@@ -313,4 +313,62 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     display: flex;
     align-items: center;
     gap: 5px;
+}/* --- Gold / Fire Effect --- */
+.best-sale-card {
+    border: 2px solid #ffcc00 !important;
+    position: relative;
+    box-shadow: 0 0 10px #ff4500, 0 0 20px #ffae00 !important;
+    animation: fire-glow 1.5s infinite alternate;
+}
+
+@keyframes fire-glow {
+    0% { box-shadow: 0 0 10px #ff4500, 0 0 20px #ffae00; border-color: #ff4500; }
+    100% { box-shadow: 0 0 20px #ff8c00, 0 0 40px #ffea00; border-color: #ffcc00; }
+}
+
+.best-sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(45deg, #ff4500, #ffcc00);
+    color: #fff;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
+}
+
+/* --- Silver / Star Effect --- */
+.silver-sale-card {
+    border: 2px solid #c0c0c0 !important;
+    position: relative;
+    box-shadow: 0 0 10px #e0e0e0, 0 0 20px #b0b0b0 !important;
+    animation: silver-glow 1.5s infinite alternate;
+}
+
+@keyframes silver-glow {
+    0% { box-shadow: 0 0 10px #e0e0e0, 0 0 20px #808080; border-color: #808080; }
+    100% { box-shadow: 0 0 20px #ffffff, 0 0 40px #c0c0c0; border-color: #ffffff; }
+}
+
+.silver-sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(45deg, #757575, #e0e0e0);
+    color: #000;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 0 10px rgba(192, 192, 192, 0.8);
 }
