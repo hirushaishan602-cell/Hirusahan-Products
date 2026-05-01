@@ -562,9 +562,9 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
         transform: translateY(110vh) rotate(720deg) translateX(50px);
         opacity: 0;
     }
-}/* --- PURE VESAK LOGO DESIGN --- */
+}/* --- RESPONSIVE VESAK LOGO FOR MOBILE --- */
 
-.vesak-pure-logo-container {
+.vesak-responsive-logo {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -575,55 +575,91 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     align-items: center;
 }
 
-.logo-frame {
+.mini-frame {
     position: relative;
-    width: 85px;
-    height: 85px;
+    width: 65px; /* Desktop එකේදී මධ්‍යම ප්‍රමාණය */
+    height: 65px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* ධර්ම චක්‍රය (Mandala Glow) */
-.dhamma-chakra-bg {
+.mini-chakra {
     position: absolute;
-    width: 80px;
-    height: 80px;
-    border: 2px dashed #ffd700;
+    width: 100%;
+    height: 100%;
+    border: 1.5px dashed #ffd700;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.2), transparent);
-    animation: rotateSlow 20s linear infinite;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    animation: rotateSlow 15s linear infinite;
+    opacity: 0.8;
 }
 
-.vesak-main-img {
-    width: 65px;
+.mini-vesak-img {
+    width: 45px;
     height: auto;
     z-index: 10;
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); /* පින්තූරයට දීප්තියක් */
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
 }
 
-/* රන්වන් පත්‍ර (Golden Leaves) */
-.gold-leaf-l, .gold-leaf-r {
+.mini-leaf-l, .mini-leaf-r {
     position: absolute;
-    bottom: 8px;
-    width: 35px;
-    height: 35px;
+    bottom: 5px;
+    width: 20px;
+    height: 20px;
     background: url('https://img.icons8.com/ios-filled/50/ffd700/leaf.png') no-repeat center/contain;
 }
 
-.gold-leaf-l { left: -25px; transform: rotate(-35deg); }
-.gold-leaf-r { right: -25px; transform: rotate(35deg) scaleX(-1); }
+.mini-leaf-l { left: -15px; transform: rotate(-30deg); }
+.mini-leaf-r { right: -15px; transform: rotate(30deg) scaleX(-1); }
 
-/* Animation */
+/* --- MOBILE OPTIMIZATION (තිරය කුඩා වූ විට) --- */
+@media (max-width: 768px) {
+    .mini-frame {
+        width: 45px; /* ෆෝන් එකේදී ප්‍රමාණය තවත් කුඩා කළා */
+        height: 45px;
+    }
+    
+    .mini-vesak-img {
+        width: 32px; /* ෆෝන් එකේදී බුදු රුව කුඩා කිරීම */
+    }
+    
+    .mini-leaf-l, .mini-leaf-r {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .mini-leaf-l { left: -10px; }
+    .mini-leaf-r { right: -10px; }
+    
+    /* ඉඩ මදි නම් Header එකේ අනෙක් අංග අතර පරතරය හැදීමට */
+    .vesak-responsive-logo {
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+}
+
 @keyframes rotateSlow {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}.flower-rain {
+    position: fixed;
+    top: -50px;
+    z-index: 9999; /* සෑම දෙයකටම වඩා ඉදිරියෙන් පෙන්වීමට */
+    pointer-events: none; /* බටන් ක්ලික් කිරීමට බාධාවක් නොවීමට */
+    user-select: none;
+    animation: fall linear forwards;
 }
 
-/* Mobile වලදී ප්‍රමාණය කුඩා කිරීම */
+@keyframes fall {
+    to {
+        transform: translateY(105vh) rotate(360deg);
+    }
+}
+
+/* ෆෝන් සඳහා විශේෂිත සැකසුම් */
 @media (max-width: 768px) {
-    .logo-frame { width: 60px; height: 60px; }
-    .vesak-main-img { width: 45px; }
-    .dhamma-chakra-bg { width: 55px; height: 55px; }
+    .flower-rain {
+        z-index: 9999;
+        /* ෆෝන් එකේදී මල් වැස්ස තවත් වේගවත් හෝ මන්දගාමී කිරීමට අවශ්‍ය නම් මෙහි වෙනස් කරන්න */
+    }
 }

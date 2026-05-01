@@ -262,4 +262,30 @@ window.sendToWhatsApp = function() {
     const total = orderList.reduce((sum, item) => sum + item.total, 0);
     msg += `\n━━━━━━━━━━━━━━━━━━━━━━\n*TOTAL: LKR ${total.toLocaleString()}*\n━━━━━━━━━━━━━━━━━━━━━━\n✅ Please confirm. Thank you!`;
     window.open(`https://wa.me/94723961127?text=${encodeURIComponent(msg)}`, '_blank');
-};
+};function createFlower() {
+    const flower = document.createElement('div');
+    flower.classList.add('flower-rain');
+    
+    // මල් වර්ග (ඔබේ කැමැත්ත අනුව වෙනස් කරන්න)
+    flower.innerHTML = '🌸'; 
+    
+    // ෆෝන් වලට ගැළපෙන සේ පරාසය සැකසීම
+    const startX = Math.random() * window.innerWidth;
+    const duration = Math.random() * 3 + 2; // තත්පර 2-5 අතර
+    const size = Math.random() * (window.innerWidth < 768 ? 15 : 25) + 10; // ෆෝන් වලට කුඩා මල්
+
+    flower.style.left = `${startX}px`;
+    flower.style.fontSize = `${size}px`;
+    flower.style.animationDuration = `${duration}s`;
+    flower.style.opacity = Math.random();
+
+    document.body.appendChild(flower);
+
+    // ඇනිමේෂන් එක ඉවර වූ පසු ඉවත් කිරීම
+    setTimeout(() => {
+        flower.remove();
+    }, duration * 1000);
+}
+
+// මල් වැස්ස ආරම්භ කිරීම
+setInterval(createFlower, 300);
