@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Hirusahan Products | Premium Sri Lankan Spices</title>
+    <title>Hirusahan Products | Premium spices</title>
     <meta name="description" content="Experience the pure quality of authentic Sri Lankan spices. Hirusahan Products offers premium quality Spices with high precision and flavor.">
     
     <link rel="icon" href="logo.png" type="image/png">
@@ -25,9 +25,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="loading-overlay" style="display: none;">
-        <div class="loader"></div>
+    <div class="bo-full-nature-container">
+    <!-- වම් පස අතු සහ කොළ පද්ධතිය -->
+    <div class="nature-side left-side">
+        <div class="branch-group bg-1">
+            <div class="main-branch"></div>
+            <div class="leaves-container">
+                <div class="leaf l1"></div><div class="leaf l2"></div><div class="leaf l3"></div>
+            </div>
+            <div class="lantern-hook">
+                <div class="round-red-lantern"><div class="gold-tail"></div></div>
+            </div>
+        </div>
+        <div class="branch-group bg-2">
+            <div class="main-branch"></div>
+            <div class="leaves-container">
+                <div class="leaf l4"></div><div class="leaf l5"></div>
+            </div>
+        </div>
     </div>
+
+    <!-- දකුණු පස අතු සහ කොළ පද්ධතිය -->
+    <div class="nature-side right-side">
+        <div class="branch-group bg-3">
+            <div class="main-branch"></div>
+            <div class="leaves-container">
+                <div class="leaf l1"></div><div class="leaf l2"></div><div class="leaf l3"></div>
+            </div>
+            <div class="lantern-hook">
+                <div class="round-red-lantern"><div class="gold-tail"></div></div>
+            </div>
+        </div>
+        <div class="branch-group bg-4">
+            <div class="main-branch"></div>
+            <div class="leaves-container">
+                <div class="leaf l4"></div><div class="leaf l5"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- මල් වැස්ස සඳහා වන කොටස -->
+<div class="flower-rain-container" id="flowerRain">
+    <!-- JavaScript මගින් මල් මෙතැනට එකතු වේ -->
+</div>
 
     <div id="login-screen">
         <div class="login-card">
@@ -65,15 +105,28 @@
 
     <div id="main-website">
         <header>
-    <div class="header-logo-area" style="display: flex; align-items: center; gap: 12px;">
-        <img src="logo.png" alt="Logo" class="nav-logo-small">
-        <span class="brand-text" style="font-family: 'Great Vibes', cursive; font-size: 1.8rem; text-transform: none;">
-            <span style="color: #ffcc00; text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);">Hirusahan</span> 
-            <span style="color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);">Products</span>
-        </span>
+            <div class="header-logo-area" style="display: flex; align-items: center; gap: 12px;">
+                <img src="logo.png" alt="Logo" class="nav-logo-small">
+                <span class="brand-text" style="font-family: 'Great Vibes', cursive; font-size: 1.8rem; text-transform: none;">
+                    <span style="color: #ffcc00; text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);">Hirusahan</span> 
+                    <span style="color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);">Products</span>
+                </span>
+                <div class="vesak-pure-logo-container">
+    <div class="logo-frame">
+        <!-- කැරකෙන ධර්ම චක්‍රය -->
+        <div class="dhamma-chakra-bg"></div>
+        
+        <!-- ඔබ එවූ ලෝගෝ එකේ පින්තූරය -->
+        <img src="buddha.png" alt="Vesak Logo" class="vesak-main-img">
+        
+        <!-- රන්වන් පත්‍ර -->
+        <div class="gold-leaf-l"></div>
+        <div class="gold-leaf-r"></div>
     </div>
-    <button class="logout-btn" onclick="secureLogout()">LOGOUT</button>
-</header>
+</div>
+            </div>
+            <button class="logout-btn" onclick="secureLogout()">LOGOUT</button>
+        </header>
 
         <section class="hero">
             <div class="hero-text">
@@ -86,8 +139,6 @@
             <h2 class="section-title">FLAVOUR COLLECTION</h2>
             <div id="product-container" class="product-grid"></div>
         </section>
-
-        <!-- ... ඉතිරි කොටස පෙර පරිදිම පවතී ... -->
 
         <section id="order-section" class="order-list-section">
             <h2 class="section-title">YOUR <span>ORDER LIST</span></h2>
@@ -107,9 +158,8 @@
                 <div class="total-area">
                     <h3>TOTAL: LKR <span id="grandTotal">0.00</span></h3>
                     
-                    <!-- Customer Details Form -->
                     <div id="customer-details" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid #333; margin-top: 20px; text-align: left;">
-                        <h4 style="color: #00ffff; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem;">Customer Information</h4>
+                        <h4 style="color: #ffcc00; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem;">Customer Information</h4>
                         <input type="text" id="cust-name" placeholder="Full Name" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
                         <input type="text" id="cust-address" placeholder="Delivery Address" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
                         <input type="tel" id="cust-phone" placeholder="Phone Number" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
@@ -127,7 +177,6 @@
         </footer>
     </div>
 
-    <!-- Floating Cart Icon -->
     <div id="floating-cart" onclick="scrollToOrderTable()" style="position: fixed; bottom: 20px; right: 20px; background: #ff6600; color: white; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 0 15px rgba(255, 102, 0, 0.6); z-index: 1000; transition: 0.3s;">
         <i class="fas fa-shopping-cart"></i>
         <span id="cart-dot-count" style="position: absolute; top: 0; right: 0; background: #00ffff; color: #000; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #000;">0</span>

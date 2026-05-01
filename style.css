@@ -402,4 +402,228 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     .nav-logo-small {
         height: 30px !important; /* Logo එක මදක් කුඩා කරයි */
     }
+}/* --- FULL BO LEAVES & BRANCHES SYSTEM --- */
+
+.bo-full-nature-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1005;
+}
+
+.nature-side {
+    position: absolute;
+    width: 380px;
+}
+
+/* වම් පස පහළට ස්ථානගත කිරීම */
+.left-side { left: -10px; top: 70px; }
+.right-side { right: -10px; top: 10px; }
+
+.branch-group {
+    position: relative;
+    margin-bottom: 20px;
+    transform-origin: top;
+    animation: branchWind 5s ease-in-out infinite alternate;
+}
+
+/* අතු (Branches) */
+.main-branch {
+    width: 100%;
+    height: 4px;
+    background: #3d2b1f;
+    border-radius: 50%;
+    transform: rotate(10deg);
+}
+
+.bg-3 .main-branch, .bg-4 .main-branch { transform: rotate(-10deg); }
+
+/* බෝ පත්‍ර (Bo Leaves) */
+.leaves-container {
+    position: absolute;
+    top: 0; width: 100%; height: 100%;
+}
+
+.leaf {
+    position: absolute;
+    width: 25px;
+    height: 35px;
+    background: radial-gradient(circle at top, #3d8c31, #1e3f1a);
+    border-radius: 50% 50% 20% 80% / 50% 80% 20% 50%; /* බෝ පත්‍ර හැඩය */
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    transform-origin: top center;
+    animation: leafFlutter 3s ease-in-out infinite alternate;
+}
+
+/* පත්‍ර පිහිටීම් */
+.l1 { top: 10px; left: 40px; transform: rotate(45deg); }
+.l2 { top: 25px; left: 120px; transform: rotate(-20deg); width: 30px; height: 42px; }
+.l3 { top: 5px; left: 200px; transform: rotate(15deg); }
+.l4 { top: 15px; right: 60px; transform: rotate(-30deg); }
+.l5 { top: 30px; right: 140px; transform: rotate(10deg); width: 22px; height: 30px; }
+
+/* රවුම් රතු කූඩුව[cite: 1, 3] */
+.lantern-hook {
+    position: absolute;
+    top: 30px;
+    left: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bg-3 .lantern-hook { left: auto; right: 150px; }
+
+.round-red-lantern {
+    width: 45px;
+    height: 55px;
+    background: radial-gradient(circle, #ff3333, #800000);
+    border-radius: 50% / 40%;
+    border: 2px solid #ffcc00;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    position: relative;
+}
+
+.gold-tail {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    width: 4px;
+    height: 40px;
+    background: linear-gradient(to bottom, #ffcc00, transparent);
+    transform: translateX(-50%);
+    animation: tailSway 2s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@keyframes branchWind {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(3deg); }
+}
+
+@keyframes leafFlutter {
+    0% { transform: rotate(var(--r, 0deg)) scale(1); }
+    100% { transform: rotate(calc(var(--r, 0deg) + 10deg)) scale(1.05); }
+}
+
+@keyframes tailSway {
+    0% { transform: translateX(-50%) rotate(-10deg); }
+    100% { transform: translateX(-50%) rotate(15deg); }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .nature-side { width: 200px; }
+    .leaf { width: 15px; height: 22px; }
+    .round-red-lantern { width: 30px; height: 40px; }
+}/* --- FLOWER RAIN SYSTEM --- */
+
+.flower-rain-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* මවුස් එකට බාධා නොවීමට */
+    z-index: 999; /* අතු වලට වඩා පිටුපසින් තබා ගැනීමට */
+    overflow: hidden;
+}
+
+.falling-flower {
+    position: absolute;
+    top: -50px;
+    background: #ff69b4; /* මල් වල වර්ණය (පින්ක්/සුදු කැමති පරිදි වෙනස් කරන්න) */
+    border-radius: 50% 0 50% 50%;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+    animation: fall linear forwards;
+}
+
+/* මලක හැඩය සඳහා අමතර සැකසුම් */
+.falling-flower::after {
+    content: '';
+    position: absolute;
+    width: 100%; height: 100%;
+    background: inherit;
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(45deg);
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% {
+        transform: translateY(110vh) rotate(720deg) translateX(50px);
+        opacity: 0;
+    }
+}/* --- PURE VESAK LOGO DESIGN --- */
+
+.vesak-pure-logo-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-frame {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ධර්ම චක්‍රය (Mandala Glow) */
+.dhamma-chakra-bg {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px dashed #ffd700;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2), transparent);
+    animation: rotateSlow 20s linear infinite;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.vesak-main-img {
+    width: 65px;
+    height: auto;
+    z-index: 10;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); /* පින්තූරයට දීප්තියක් */
+}
+
+/* රන්වන් පත්‍ර (Golden Leaves) */
+.gold-leaf-l, .gold-leaf-r {
+    position: absolute;
+    bottom: 8px;
+    width: 35px;
+    height: 35px;
+    background: url('https://img.icons8.com/ios-filled/50/ffd700/leaf.png') no-repeat center/contain;
+}
+
+.gold-leaf-l { left: -25px; transform: rotate(-35deg); }
+.gold-leaf-r { right: -25px; transform: rotate(35deg) scaleX(-1); }
+
+/* Animation */
+@keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile වලදී ප්‍රමාණය කුඩා කිරීම */
+@media (max-width: 768px) {
+    .logo-frame { width: 60px; height: 60px; }
+    .vesak-main-img { width: 45px; }
+    .dhamma-chakra-bg { width: 55px; height: 55px; }
 }
