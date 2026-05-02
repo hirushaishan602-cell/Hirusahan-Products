@@ -779,4 +779,44 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
         margin-right: 0 !important;
         box-sizing: border-box !important;
     }
+}@media screen and (max-width: 600px) {
+    /* Order List එක තියෙන Section එක */
+    #order-section.order-list-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 10px !important;
+        margin: 0 auto !important;
+    }
+
+    /* ඇතුළත තියෙන Order Container එක */
+    #order-section .order-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        background: rgba(255, 255, 255, 0.05) !important; /* පල්ලෙහා බොක්ස් එකේ පාට */
+        border: 1px solid #333 !important;
+        border-radius: 10px !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* පල්ලෙහා තියෙන Customer Details Box එක */
+    #customer-details {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 20px 0 !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid #333 !important;
+        border-radius: 10px !important;
+    }
+
+    /* Table එක ඇතුළේ Item සහ Value අතර Space එක අඩු කිරීම */
+    #orderItems td {
+        display: flex !important;
+        justify-content: flex-start !important;
+        padding-left: 100px !important; /* අගය පටන් ගන්නා තැන */
+        min-height: 30px !important;
+    }
 }
