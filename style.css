@@ -717,4 +717,34 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     .order-list-section table thead {
         display: none;
     }
+}@media screen and (max-width: 600px) {
+    /* එක පේළියක ඇති Label එක සහ Value එක අතර Space එක අඩු කිරීම */
+    #orderItems td {
+        display: flex !important;
+        justify-content: flex-start !important; /* දකුණට නොගොස් වම් පැත්තට පෙළගැස්වීම */
+        align-items: center !important;
+        padding-left: 110px !important; /* Label එකට ඉඩ තබා මෙතනින් Value එක පටන් ගනී */
+        text-align: left !important;
+        min-height: 35px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Label එක (ITEM, QTY...) සඳහා වෙනම Style එකක් */
+    #orderItems td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 90px; /* Label එකේ පළල සීමා කිරීමෙන් Space එක පාලනය වේ */
+        font-weight: bold;
+        color: #ffcc00;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 10px;
+        text-align: left;
+    }
+
+    /* Table Row (Item Card) එකේ ඇතුළත Padding අඩු කිරීම */
+    #orderItems tr {
+        padding: 8px !important;
+        margin-bottom: 10px !important;
+    }
 }
