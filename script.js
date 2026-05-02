@@ -38,7 +38,7 @@ const rememberMeCheckbox = document.getElementById('remember-me');
 
 let orderList = [];
 
-// Stock Sync - Database එකෙන් Items කියවීම[cite: 2]
+// Stock Sync[cite: 2]
 function syncStock() {
     db.ref('products').on('value', (snapshot) => {
         const data = snapshot.val();
@@ -102,18 +102,25 @@ if(togglePassword) {
     });
 }
 
-// FIXED Auth Logic - Login with Auto-Registration[cite: 3]
+// FIXED Auth Logic with Loading Animation[cite: 3]
 if(authForm) {
     authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const email = emailField.value.trim(); 
         const password = passwordField.value;
+        const loginBtn = authForm.querySelector('button[type="submit"]'); // Login Button එක හඳුනා ගැනීම
 
         if(!email || !password) {
             alert("කරුණාකර Email සහ Password ඇතුළත් කරන්න.");
             return;
         }
+
+        // Loading ආරම්භය: බොත්තම වෙනස් කිරීම
+        const originalBtnText = loginBtn.innerHTML;
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> LOADING...';
+        loginBtn.style.opacity = "0.7";
 
         try {
             // මුලින්ම ලොග් වීමට උත්සාහ කරයි[cite: 3]
@@ -127,12 +134,16 @@ if(authForm) {
                     alert("ඔබ වෙනුවෙන් අලුත් ගිණුමක් සාදන ලදී!");
                     handleSuccessAuth(email);
                 } catch (signUpError) {
-                    // Password එක අකුරු 6කට වඩා අඩු නම් වැනි දෝෂ මෙහිදී පෙන්වයි
-                    alert("ලොග් වීමට නොහැක. ඔබගේ Password එක නිවැරදිදැයි බලන්න.");
+                    alert("ලොග් වීමට නොහැක. Password එක අවම අකුරු 6ක් විය යුතුය.");
                 }
             } else {
                 alert("දෝෂයක්: " + error.message);
             }
+        } finally {
+            // Loading අවසානය: බොත්තම යථා තත්ත්වයට පත් කිරීම
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = originalBtnText;
+            loginBtn.style.opacity = "1";
         }
     });
 }
@@ -374,7 +385,7 @@ function trackOrderStatus(orderId) {
     });
 }
 
-// 🌸 Flower Rain Animation
+// 🌸 Animation
 function createFlower() {
     const flower = document.createElement('div');
     flower.classList.add('flower-rain');
