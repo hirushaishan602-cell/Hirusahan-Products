@@ -48,7 +48,7 @@ function syncStock() {
     });
 }
 
-// Initialization
+// Initialization[cite: 3]
 window.addEventListener('load', () => {
     const isAuth = localStorage.getItem('hirusahan_auth') === 'granted';
     const savedEmail = localStorage.getItem('remembered_email');
@@ -59,7 +59,6 @@ window.addEventListener('load', () => {
         if(reAuthContainer) reAuthContainer.style.display = 'block';
     }
 
-    // කලින් Order එකක් තිබුණා නම් එය පෙන්වන්න[cite: 2]
     if (isAuth && savedOrderId) {
         checkExistingOrder(savedOrderId);
     }
@@ -103,17 +102,37 @@ if(togglePassword) {
     });
 }
 
-// Auth Logic[cite: 2]
+// FIXED Auth Logic - Login with Auto-Registration[cite: 3]
 if(authForm) {
     authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const email = emailField.value.trim(); 
         const password = passwordField.value;
+
+        if(!email || !password) {
+            alert("කරුණාකර Email සහ Password ඇතුළත් කරන්න.");
+            return;
+        }
+
         try {
+            // මුලින්ම ලොග් වීමට උත්සාහ කරයි[cite: 3]
             await auth.signInWithEmailAndPassword(email, password);
             handleSuccessAuth(email);
         } catch (error) {
-            alert("Failed: " + error.message);
+            // පරිශීලකයා ලියාපදිංචි වී නොමැති නම් අලුතින් ගිණුමක් සාදයි[cite: 3]
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-login-credentials') {
+                try {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                    alert("ඔබ වෙනුවෙන් අලුත් ගිණුමක් සාදන ලදී!");
+                    handleSuccessAuth(email);
+                } catch (signUpError) {
+                    // Password එක අකුරු 6කට වඩා අඩු නම් වැනි දෝෂ මෙහිදී පෙන්වයි
+                    alert("ලොග් වීමට නොහැක. ඔබගේ Password එක නිවැරදිදැයි බලන්න.");
+                }
+            } else {
+                alert("දෝෂයක්: " + error.message);
+            }
         }
     });
 }
@@ -132,7 +151,11 @@ window.socialAuth = async function(platform) {
 
 function handleSuccessAuth(email) {
     localStorage.setItem('hirusahan_auth', 'granted');
-    if (rememberMeCheckbox.checked) localStorage.setItem('remembered_email', email);
+    if (rememberMeCheckbox.checked) {
+        localStorage.setItem('remembered_email', email);
+    } else {
+        localStorage.removeItem('remembered_email');
+    }
     showWebsite();
 }
 
@@ -147,12 +170,11 @@ window.secureLogout = function() {
     location.reload(); 
 }
 
-// Display Products (ඔයාගේ Original Style එකමයි)[cite: 2]
+// Display Products[cite: 2]
 function displayProducts(products) {
     const container = document.getElementById('product-container');
     if(!container) return;
     
-    // JSON Object එකක් ආවත් Array එකක් ආවත් වැඩ කරන විදිහ[cite: 2]
     const productArray = Object.keys(products).map(key => ({
         id: key,
         ...products[key]
@@ -161,7 +183,6 @@ function displayProducts(products) {
     container.innerHTML = productArray.map((p, index) => {
         const stockValue = p.inStock !== undefined ? p.inStock : p.instock;
         const isAvailable = String(stockValue).toLowerCase() === "true";
-        
         const isGold = p.isBestSale === true || String(p.isBestSale).toLowerCase() === "true";
         const isSilver = p.isSilverSale === true || String(p.isSilverSale).toLowerCase() === "true";
 
@@ -174,13 +195,11 @@ function displayProducts(products) {
                 ${isGold ? `<div class="best-sale-badge"><i class="fas fa-fire"></i> BEST SALE</div>` : ''}
                 ${isSilver ? `<div class="silver-sale-badge">⭐ TOP RATED</div>` : ''}
                 ${!isAvailable ? `<div class="stock-badge status-out">OUT OF STOCK</div>` : ''}
-                
                 <div class="product-img-container">
                     ${p.img && (p.img.includes('/') || p.img.includes('.')) 
                         ? `<img src="${p.img}" alt="${p.name}" class="product-image">` 
                         : `<span class="product-emoji">${p.img || '📦'}</span>`}
                 </div>
-                
                 <h3>${p.name}</h3>
                 <div class="product-options">
                     <div class="option-group">
@@ -208,30 +227,20 @@ function displayProducts(products) {
 
 // Order Management[cite: 2]
 window.addToListFromDB = function(index, name, price) {
-    // 1. දැනටමත් Active Order එකක් තියෙනවාද කියලා බලනවා
     const activeOrderId = localStorage.getItem('active_order_id');
-
     if (activeOrderId) {
-        // 2. ඒ Order එකේ status එක 'delivered' ද කියලා Database එකෙන් චෙක් කරනවා
         db.ref('orders/' + activeOrderId + '/status').once('value', (snapshot) => {
             const status = snapshot.val();
             if (status && status.toLowerCase() === 'delivered') {
-                // 3. Status එක Delivered නම්, Tracking අයින් කරලා පරණ ID එක Delete කරනවා
                 localStorage.removeItem('active_order_id');
-                
-                // UI එක සාමාන්‍ය තත්ත්වයට පත් කරනවා
-                const trackingSection = document.getElementById('tracking-section');
-                const customerDetails = document.getElementById('customer-details');
+                if(document.getElementById('tracking-section')) document.getElementById('tracking-section').style.display = 'none';
+                if(document.getElementById('customer-details')) document.getElementById('customer-details').style.display = 'block';
                 const orderBtn = document.querySelector('.whatsapp-btn');
-                
-                if(trackingSection) trackingSection.style.display = 'none';
-                if(customerDetails) customerDetails.style.display = 'block';
                 if(orderBtn) orderBtn.style.display = 'inline-block';
             }
         });
     }
 
-    // 4. සාමාන්‍ය විදිහට ලිස්ට් එකට බඩු එකතු කරන Logic එක
     const weightSelect = document.getElementById(`weight-${index}`);
     const qtyInput = document.getElementById(`qty-${index}`);
     const weightMultiplier = parseFloat(weightSelect.value);
@@ -261,7 +270,6 @@ function updateOrderTable() {
     document.getElementById('grandTotal').innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
 }
 
-// රතු පාට Delete Button Logic එක[cite: 2]
 window.removeItem = function(index) {
     orderList.splice(index, 1);
     const dot = document.getElementById('cart-dot-count');
@@ -278,7 +286,6 @@ window.scrollToOrderTable = function() {
     if (section) section.scrollIntoView({ behavior: 'smooth' });
 };
 
-// Database එකට Order එක යැවීම සහ Tracking පෙන්වීම[cite: 2]
 window.submitOrderToDB = async function() {
     if (orderList.length === 0) { alert("ඔබේ Order List එක හිස්!"); return; }
     
@@ -300,46 +307,35 @@ window.submitOrderToDB = async function() {
     };
 
     try {
-        // 1. මුලින්ම Database එකට සේව් කරනවා
         const newRef = db.ref('orders').push();
         const orderId = newRef.key;
         await newRef.set(orderData);
         localStorage.setItem('active_order_id', orderId);
 
-        // 2. දැන් WhatsApp එකට විස්තර ටික හදනවා
         let message = `*--- NEW ORDER ---*\n`;
         message += `*Order ID:* ${orderId}\n`;
         message += `*Name:* ${name}\n`;
         message += `*Phone:* ${phone}\n`;
         message += `*Address:* ${address}\n\n`;
         message += `*--- ITEMS ---*\n`;
-
         orderList.forEach((item, index) => {
             message += `${index + 1}. ${item.name} (${item.weight}) x ${item.qty}\n`;
         });
-
         message += `\n*Total Amount: LKR ${totalAmount.toFixed(2)}*`;
 
-        // 3. WhatsApp link එක සාදා වෙනත් Tab එකක Open කරනවා
-        const whatsappNumber = "94703925738"; // ඔයාගේ WhatsApp අංකය මෙතනට දාන්න
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        const whatsappNumber = "94703925738";
+        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
         
-        // Tracking UI එක පෙන්වනවා
         showTrackingUI(orderId);
         trackOrderStatus(orderId);
-        
         alert("සාර්ථකයි! දැන් WhatsApp හරහා Order එක අප වෙත එවන්න.");
-        
-        // WhatsApp එකට යොමු කරනවා
         window.open(whatsappURL, '_blank');
 
-        // පරණ ලිස්ට් එක ක්ලියර් කරනවා
         orderList = [];
         updateOrderTable();
-        
     } catch (e) { alert("දෝෂයක්: " + e.message); }
 };
+
 function trackOrderStatus(orderId) {
     db.ref('orders/' + orderId).on('value', (snapshot) => {
         const data = snapshot.val();
@@ -348,8 +344,8 @@ function trackOrderStatus(orderId) {
         const statusText = document.getElementById('status-text');
         const statusDesc = document.getElementById('status-desc');
         const progressFill = document.getElementById('progress-fill');
-
         const currentStatus = data.status ? data.status.toLowerCase() : "pending";
+        
         if(statusText) statusText.innerText = currentStatus.toUpperCase();
 
         if (progressFill) {
@@ -364,15 +360,8 @@ function trackOrderStatus(orderId) {
                 progressFill.style.background = "#ffcc00";
             } 
             else if (currentStatus === "shipped") {
-                // ඔයා Database එකේ manually ලියන "May 11 - 15" වගේ අගය මෙතනට ගන්නවා
-                // එහෙම එකක් ලියලා නැත්නම් විතරක් "Processing..." කියලා පෙන්වනවා
                 const manualRange = data.deliveryRange ? data.deliveryRange : "Processing...";
-
-                if(statusDesc) {
-                    statusDesc.innerHTML = `ඇණවුම ප්‍රවාහනය සඳහා භාර දී ඇත. <br>
-                    <b style="color: #00ffff; font-size: 1.1rem;">ලැබෙන කාලය: ${manualRange} අතරතුර</b>`;
-                }
-                
+                if(statusDesc) statusDesc.innerHTML = `ඇණවුම ප්‍රවාහනය සඳහා භාර දී ඇත. <br><b style="color: #00ffff; font-size: 1.1rem;">ලැබෙන කාලය: ${manualRange} අතරතුර</b>`;
                 progressFill.style.width = "75%";
                 progressFill.style.background = "#00ffff";
             } 
@@ -385,7 +374,7 @@ function trackOrderStatus(orderId) {
     });
 }
 
-// 🌸 Animation
+// 🌸 Flower Rain Animation
 function createFlower() {
     const flower = document.createElement('div');
     flower.classList.add('flower-rain');
