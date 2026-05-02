@@ -255,8 +255,7 @@ function updateOrderTable() {
     const tableBody = document.getElementById('orderItems');
     if(!tableBody) return;
     tableBody.innerHTML = orderList.map((item, index) => `
-        <tr><td>${item.name}</td><td>${item.weight}</td><td>${item.qty}</td><td>LKR ${item.total.toFixed(2)}</td>
-        <td><button class="remove-item" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button></td></tr>
+        <tr><td data-label="ITEM">${item.name}</td><td data-label="WEIGHT">${item.weight}</td><td data-label="QTY">${item.qty}</td><td data-label="PRICE">LKR ${item.total}</td><td data-label="ACTION"><button class="remove-item" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button></td></tr>
     `).join('');
     const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
     document.getElementById('grandTotal').innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});

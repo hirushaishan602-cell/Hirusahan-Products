@@ -625,4 +625,55 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
         z-index: 9999;
         /* ෆෝන් එකේදී මල් වැස්ස තවත් වේගවත් හෝ මන්දගාමී කිරීමට අවශ්‍ය නම් මෙහි වෙනස් කරන්න */
     }
+}/* Mobile Responsive Order List */
+@media screen and (max-width: 600px) {
+    /* Table Header එක හංගන්න */
+    .order-table thead {
+        display: none;
+    }
+
+    /* Table එකේ row එක Card එකක් වගේ පේන්න හදන්න */
+    .order-table, .order-table tbody, .order-table tr, .order-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .order-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #333;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        position: relative;
+    }
+
+    /* හැම Cell එකක්ම පේළියක් විදිහට හදන්න */
+    .order-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px solid #222;
+        font-size: 14px;
+        min-height: 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .order-table td:last-child {
+        border-bottom: none;
+    }
+
+    /* Cell එක ඉස්සරහින් මොකක්ද මේ කියල පෙන්වන්න (Item, Qty, etc) */
+    .order-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        font-weight: bold;
+        text-align: left;
+        color: #ff6600; /* ඔයාගේ Cyberpunk Color එක */
+        font-family: 'Orbitron', sans-serif;
+        font-size: 12px;
+    }
 }
