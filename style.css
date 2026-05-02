@@ -717,43 +717,4 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     .order-list-section table thead {
         display: none;
     }
-}@media screen and (max-width: 600px) {
-    /* Title එකේ Space අඩු කිරීම */
-    .section-title {
-        margin-top: 10px !important;
-        margin-bottom: 5px !important;
-        font-size: 1.4rem !important; /* Title එක පොඩ්ඩක් කුඩා කිරීමෙන් ඉඩ ඉතිරි වේ */
-    }
-
-    /* Order Container එකේ උඩ Space එක අඩු කිරීම */
-    .order-container {
-        padding-top: 10px !important;
-        margin-top: 0 !important;
-    }
-
-    /* Table එකේ Row එකක් ඇතුළේ තියෙන පේළි අතර Space අඩු කිරීම */
-    #orderItems td {
-        min-height: 30px !important; /* කලින් 40px තිබුණ එක අඩු කළා */
-        padding-top: 5px !important;
-        padding-bottom: 5px !important;
-        font-size: 13px !important;
-    }
-
-    /* Item එකක් සහ තව Item එකක් අතර තියෙන දුර අඩු කිරීම */
-    #orderItems tr {
-        margin-bottom: 8px !important; /* කලින් 15px තිබුණ එක අඩු කළා */
-        padding: 5px 10px !important;
-    }
-
-    /* Total පෙන්වන තැන Space එක */
-    .total-area h3 {
-        margin: 10px 0 !important;
-        font-size: 1.1rem !important;
-    }
-
-    /* Customer Information Title එකේ Space එක */
-    #customer-details h4 {
-        margin-top: 5px !important;
-        margin-bottom: 8px !important;
-    }
 }
