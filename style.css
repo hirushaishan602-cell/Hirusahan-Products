@@ -683,7 +683,7 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
         width: 100%;
     }
     #orderItems tr {
-        margin-bottom: 15px;
+        margin-bottom: 5px;
         border: 1px solid #ff6600;
         padding: 10px;
         background: rgba(0, 0, 0, 0.8);
