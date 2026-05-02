@@ -321,7 +321,7 @@ window.submitOrderToDB = async function() {
         message += `\n*Total Amount: LKR ${totalAmount.toFixed(2)}*`;
 
         // 3. WhatsApp link එක සාදා වෙනත් Tab එකක Open කරනවා
-        const whatsappNumber = "94723961127"; // ඔයාගේ WhatsApp අංකය මෙතනට දාන්න
+        const whatsappNumber = "94703925738"; // ඔයාගේ WhatsApp අංකය මෙතනට දාන්න
         const encodedMessage = encodeURIComponent(message);
         const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
         
