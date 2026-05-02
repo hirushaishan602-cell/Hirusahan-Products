@@ -717,23 +717,4 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
     .order-list-section table thead {
         display: none;
     }
-}/* Container දෙකම එකම පළලකට බලෙන්ම ගැනීම */
-#order-section, 
-#customer-details,
-.order-list-section, 
-.customer-details {
-    width: 95% !important;
-    max-width: 600px !important; /* මේක ඔයාට ඕන ගාණට (උදා: 500px) වෙනස් කරන්න */
-    margin: 20px auto !important;
-    padding: 15px !important;
-    display: block !important;
-    box-sizing: border-box !important;
-}
-
-/* ඇතුළේ තියෙන Table සහ Form එකත් 100% පළල කිරීම */
-.order-container, 
-.customer-form-container,
-#orderItems {
-    width: 100% !important;
-    margin: 0 !important;
 }
