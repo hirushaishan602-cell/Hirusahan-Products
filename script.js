@@ -134,7 +134,7 @@ if(authForm) {
                     alert("ඔබ වෙනුවෙන් අලුත් ගිණුමක් සාදන ලදී!");
                     handleSuccessAuth(email);
                 } catch (signUpError) {
-                    alert("ලොග් වීමට නොහැක. Password එක අවම අකුරු 6ක් විය යුතුය.");
+                    alert("ලොග් වීමට නොහැක. ඔබගේ Password එක නිවැරදිදැයි බලන්න.");
                 }
             } else {
                 alert("දෝෂයක්: " + error.message);
