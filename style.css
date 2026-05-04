@@ -787,4 +787,89 @@ button:disabled, select:disabled, input:disabled { cursor: not-allowed !importan
         padding-left: 100px !important; /* අගය පටන් ගන්නා තැන */
         min-height: 30px !important;
     }
+}/* Discount Price එක සඳහා Style එක */
+.original-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.9rem;
+    margin-right: 8px;
+}
+
+.discounted-price {
+    color: #ffcc00; /* කැපී පෙනෙන පාටක් */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.discount-tag {
+    background: #ff4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
+}/* Mobile Responsive Order List Action Fix */
+@media screen and (max-width: 600px) {
+    /* Table Header එක සම්පූර්ණයෙන් හංගන්න */
+    #orderTable thead {
+        display: none;
+    }
+
+    /* Table එකේ rows එකින් එක cards විදිහට පෙන්වන්න */
+    #orderTable, #orderTable tbody, #orderTable tr, #orderTable td {
+        display: block;
+        width: 100%;
+    }
+
+    #orderTable tr {
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 102, 0, 0.4); /* Cyberpunk Orange Border */
+        padding: 10px;
+        background: rgba(10, 10, 10, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* හැම දත්ත පේළියක්ම (Item, Weight, etc.) */
+    #orderItems td {
+        text-align: right;
+        padding-left: 45% !important;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        min-height: 40px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-family: 'Rajdhani', sans-serif;
+    }
+
+    /* Label එක පෙන්වීමට (ITEM, QTY...) */
+    #orderItems td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        color: #ffcc00; /* Gold color for labels */
+        font-family: 'Orbitron', sans-serif;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Action (Delete) Button එක තියෙන තැන */
+    #orderItems td[data-label="ACTION"] {
+        border-bottom: none;
+        justify-content: center;
+        padding-left: 10px !important;
+        background: rgba(255, 0, 0, 0.05); /* පොඩි රතු පැහැයක් */
+        margin-top: 5px;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .remove-item {
+        width: 100%; /* Delete button එක full width කරන්න */
+        padding: 8px;
+        font-size: 0.9rem;
+    }
 }

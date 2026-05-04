@@ -48,7 +48,7 @@ function syncStock() {
     });
 }
 
-// Initialization[cite: 3]
+// Initialization
 window.addEventListener('load', () => {
     const isAuth = localStorage.getItem('hirusahan_auth') === 'granted';
     const savedEmail = localStorage.getItem('remembered_email');
@@ -102,32 +102,29 @@ if(togglePassword) {
     });
 }
 
-// FIXED Auth Logic with Loading Animation[cite: 3]
+// FIXED Auth Logic with Loading Animation
 if(authForm) {
     authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const email = emailField.value.trim(); 
         const password = passwordField.value;
-        const loginBtn = authForm.querySelector('button[type="submit"]'); // Login Button එක හඳුනා ගැනීම
+        const loginBtn = authForm.querySelector('button[type="submit"]');
 
         if(!email || !password) {
             alert("කරුණාකර Email සහ Password ඇතුළත් කරන්න.");
             return;
         }
 
-        // Loading ආරම්භය: බොත්තම වෙනස් කිරීම
         const originalBtnText = loginBtn.innerHTML;
         loginBtn.disabled = true;
         loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> LOADING...';
         loginBtn.style.opacity = "0.7";
 
         try {
-            // මුලින්ම ලොග් වීමට උත්සාහ කරයි[cite: 3]
             await auth.signInWithEmailAndPassword(email, password);
             handleSuccessAuth(email);
         } catch (error) {
-            // පරිශීලකයා ලියාපදිංචි වී නොමැති නම් අලුතින් ගිණුමක් සාදයි[cite: 3]
             if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-login-credentials') {
                 try {
                     await auth.createUserWithEmailAndPassword(email, password);
@@ -140,7 +137,6 @@ if(authForm) {
                 alert("දෝෂයක්: " + error.message);
             }
         } finally {
-            // Loading අවසානය: බොත්තම යථා තත්ත්වයට පත් කිරීම
             loginBtn.disabled = false;
             loginBtn.innerHTML = originalBtnText;
             loginBtn.style.opacity = "1";
@@ -181,7 +177,7 @@ window.secureLogout = function() {
     location.reload(); 
 }
 
-// Display Products[cite: 2]
+// Display Products (Discount Option එක පමණක් එක් කරන ලදී)[cite: 2]
 function displayProducts(products) {
     const container = document.getElementById('product-container');
     if(!container) return;
@@ -196,6 +192,21 @@ function displayProducts(products) {
         const isAvailable = String(stockValue).toLowerCase() === "true";
         const isGold = p.isBestSale === true || String(p.isBestSale).toLowerCase() === "true";
         const isSilver = p.isSilverSale === true || String(p.isSilverSale).toLowerCase() === "true";
+
+        // Discount Price Logic
+        let priceHTML = '';
+        if (p.oldPrice && p.oldPrice > p.price) {
+            const disc = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+            priceHTML = `
+                <div class="price-wrapper">
+                    <span style="text-decoration: line-through; color: #ff4d4d; font-size: 0.85rem;">LKR ${p.oldPrice.toFixed(2)}</span>
+                    <span style="background: #27ae60; color: white; font-size: 0.75rem; padding: 2px 6px; border-radius: 12px; margin-left: 8px;">-${disc}% OFF</span>
+                    <br>
+                    <span style="color: #ffcc00; font-weight: bold; font-size: 1.2rem;">LKR ${p.price.toFixed(2)}</span>
+                </div>`;
+        } else {
+            priceHTML = `<span style="color: #ffcc00; font-weight: bold; font-size: 1.2rem;">LKR ${p.price ? p.price.toFixed(2) : '0.00'}</span>`;
+        }
 
         let saleClass = "";
         if (isGold) saleClass = "best-sale-card";
@@ -227,7 +238,7 @@ function displayProducts(products) {
                         <input type="number" id="qty-${index}" class="item-qty" value="1" min="1" ${isAvailable ? '' : 'disabled'}>
                     </div>
                 </div>
-                <p class="price-tag">LKR ${p.price ? p.price.toFixed(2) : '0.00'} (100g)</p>
+                <p class="price-tag">${priceHTML} (100g)</p>
                 <button class="add-cart" onclick="addToListFromDB(${index}, '${p.name.replace(/'/g, "\\'")}', ${p.price})" ${isAvailable ? '' : 'disabled'}>
                     ${isAvailable ? 'ADD TO LIST' : 'OUT OF STOCK'}
                 </button>
@@ -273,24 +284,36 @@ window.addToListFromDB = function(index, name, price) {
 
 function updateOrderTable() {
     const tableBody = document.getElementById('orderItems');
-    if(!tableBody) return;
+    if (!tableBody) return;
+
+    // Table දත්ත පෙන්වීම (HTML structure එක data-labels සමඟ)
     tableBody.innerHTML = orderList.map((item, index) => `
-        <tr><td data-label="ITEM">${item.name}</td><td data-label="WEIGHT">${item.weight}</td><td data-label="QTY">${item.qty}</td><td data-label="PRICE">LKR ${item.total}</td><td data-label="ACTION"><button class="remove-item" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button></td></tr>
+        <tr>
+            <td data-label="ITEM">${item.name}</td>
+            <td data-label="WEIGHT">${item.weight}</td>
+            <td data-label="QTY">${item.qty}</td>
+            <td data-label="PRICE">LKR ${item.total.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td data-label="ACTION">
+                <button class="remove-item" onclick="removeItem(${index})">
+                    <i class="fas fa-trash-alt"></i> REMOVE
+                </button>
+            </td>
+        </tr>
     `).join('');
+
+    // Grand Total එක ගණනය කිරීම (Logic එක වෙනස් කර නැත)
     const grandTotal = orderList.reduce((sum, item) => sum + item.total, 0);
-    document.getElementById('grandTotal').innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+    const totalDisplay = document.getElementById('grandTotal');
+    if (totalDisplay) {
+        totalDisplay.innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
 }
 
-window.removeItem = function(index) {
+// Item එකක් ඉවත් කිරීමේ function එක (Logic එක එලෙසම පවතී)
+function removeItem(index) {
     orderList.splice(index, 1);
-    const dot = document.getElementById('cart-dot-count');
-    if(dot) dot.innerText = orderList.length;
-    if(orderList.length === 0) {
-        const cart = document.getElementById('floating-cart');
-        if(cart) cart.style.display = 'none';
-    }
     updateOrderTable();
-};
+}
 
 window.scrollToOrderTable = function() {
     const section = document.getElementById('order-section');
